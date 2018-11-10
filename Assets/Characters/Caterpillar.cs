@@ -1,47 +1,148 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace Assets.Characters
 {
-	class Caterpillar : CharacterHandler
+    class Caterpillar : CharacterHandler
 	{
         public override void SetCoorinates(Vector2Int centerCoord)
         {
-            Coordinates = new Vector2Int[]
+            switch (Rotation)
             {
-                new Vector2Int
-                {
-                    x=centerCoord.x,
-                    y=centerCoord.y-1
-                },
-                centerCoord,
-                new Vector2Int
-                {
-                    x=centerCoord.x,
-                    y=centerCoord.y+1
-                }
-            };
+                case GridRotation.Up:
+                    Coordinates = new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+                    break;
+                case GridRotation.Down:
+                    Coordinates = new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+                    break;
+                case GridRotation.Left:
+                    Coordinates = new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+                    break;
+                case GridRotation.Right:
+                    Coordinates = new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+                    break;
+            }
         }
 
         public override Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)
         {
-            return new Vector2Int[]
+            switch (Rotation)
             {
-                new Vector2Int
-                {
-                    x=futureCoords.x,
-                    y=futureCoords.y-1
-                },
-                futureCoords,
-                new Vector2Int
-                {
-                    x=futureCoords.x,
-                    y=futureCoords.y+1
-                }
-            };
+                case GridRotation.Up:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=futureCoords.x,
+                            y=futureCoords.y-1
+                        },
+                        futureCoords,
+                        new Vector2Int
+                        {
+                            x=futureCoords.x,
+                            y=futureCoords.y+1
+                        }
+                    };
+                case GridRotation.Down:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=futureCoords.x,
+                            y=futureCoords.y-1
+                        },
+                        futureCoords,
+                        new Vector2Int
+                        {
+                            x=futureCoords.x,
+                            y=futureCoords.y+1
+                        }
+                    };
+                case GridRotation.Left:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=futureCoords.x-1,
+                            y=futureCoords.y
+                        },
+                        futureCoords,
+                        new Vector2Int
+                        {
+                            x=futureCoords.x+1,
+                            y=futureCoords.y
+                        }
+                    };
+                case GridRotation.Right:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=futureCoords.x-1,
+                            y=futureCoords.y
+                        },
+                        futureCoords,
+                        new Vector2Int
+                        {
+                            x=futureCoords.x+1,
+                            y=futureCoords.y
+                        }
+                    };
+            }
+
+            return null;
         }
 		public override Vector2Int[] GetAttackArea()
 		{

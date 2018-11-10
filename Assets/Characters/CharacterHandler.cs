@@ -44,25 +44,30 @@ public class CharacterHandler : MonoBehaviour
 			if (playerPlane.Raycast(ray, out hitdist))
 			{
 				Vector3 targetPoint = ray.GetPoint(hitdist);
-				Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-				
-				targetRotation.x = Mathf.Round(targetRotation.x);
-				targetRotation.y = Mathf.Round(targetRotation.y);
-				targetRotation.z = Mathf.Round(targetRotation.z);
-				targetRotation.w = Mathf.Round(targetRotation.w);
+				Quaternion futureRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
-				var rot = GetRoation(targetRotation);
-				if(Rotation != rot)
-				{
-					Rotation = rot;
-					transform.rotation = targetRotation;
+                futureRotation = RoundRotation(futureRotation);
+
+                var futureRotationEnum = GetRoation(futureRotation);
+
+				if(Rotation != futureRotationEnum)
+                {
+                    var previousRotation = Rotation;
+                    Rotation = futureRotationEnum;
+                    if (!CanMove(GetFutureCoordinates(Coordinates[1])))
+                    {
+                        Rotation = previousRotation;
+                        return;
+                    }
+
+					transform.rotation = futureRotation;
 					UpdateAttackArea();
 				}
 			}
 		}
 	}
 
-	private void Move()
+   	private void Move()
 	{
 		if (path != null && path.Count != 0)
 		{
@@ -91,8 +96,16 @@ public class CharacterHandler : MonoBehaviour
 			transform.position += vector.normalized * movementSpeed * Time.deltaTime;
 		}
 	}
+    protected virtual Quaternion RoundRotation(Quaternion targetRotation)
+    {
+        targetRotation.x = Mathf.Round(targetRotation.x);
+        targetRotation.y = Mathf.Round(targetRotation.y);
+        targetRotation.z = Mathf.Round(targetRotation.z);
+        targetRotation.w = Mathf.Round(targetRotation.w);
+        return targetRotation;
+    }
 
-	static GridRotation GetRoation(Quaternion rot)
+    protected virtual GridRotation GetRoation(Quaternion rot)
 	{
 		if (rot.y == 1.0 && rot.w == 1.0)
 		{
@@ -114,13 +127,16 @@ public class CharacterHandler : MonoBehaviour
 	}
 	public void InitializeMovement(LinkedList<Vector3> path, LinkedList<Vector2Int> pathCoords)
     {
+        if (!CanMove(GetFutureCoordinates(pathCoords.First.Value)))
+        {
+            return;
+        }
         this.path = path;
         this.pathCoords = pathCoords;
     }
 
     public virtual void SetCoorinates(Vector2Int centerCoord)
     {
-        //rotationnot yet implemented
     }
 
     public virtual Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)
