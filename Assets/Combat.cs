@@ -77,7 +77,8 @@ public class Combat : MonoBehaviour
             team1[i].CharacterHandler.CanMove = CanMove;
 			team1[i].CharacterHandler.SetRotation(Assets.GridRotation.Up);
 			team1[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
-			i++;
+            team1[i].CharacterHandler.ApplyDamage = ApplyDamage;
+            i++;
         }
 
         i = 0;
@@ -101,7 +102,8 @@ public class Combat : MonoBehaviour
             team2[i].CharacterHandler.CanMove = CanMove;
             team2[i].CharacterHandler.SetRotation(Assets.GridRotation.Down);
             team2[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
-			i++;
+            team2[i].CharacterHandler.ApplyDamage = ApplyDamage;
+            i++;
         }
     }
 
@@ -117,6 +119,37 @@ public class Combat : MonoBehaviour
             if (tm.CharacterHighlight != characterHighlight)
                 tm.CharacterHighlight.Deselect();
         }
+    }
+
+    private void ApplyDamage(Vector2Int[] damageArea, int damage)
+    {
+        GetCharactersInDamageArea(damageArea)?.ForEach(x => x.Hurt(damage));
+    }
+
+    private List<CharacterHandler> GetCharactersInDamageArea(Vector2Int[] damageArea)
+    {
+        var characters = new List<CharacterHandler>();
+        foreach(var t in team1)
+        {
+            foreach(var pos in damageArea)
+            {
+                if(t.CharacterHandler.Coordinates.Contains(pos) && !characters.Contains(t.CharacterHandler))
+                {
+                    characters.Add(t.CharacterHandler);
+                }
+            }
+        }
+        foreach (var t in team2)
+        {
+            foreach (var pos in damageArea)
+            {
+                if (t.CharacterHandler.Coordinates.Contains(pos) && !characters.Contains(t.CharacterHandler))
+                {
+                    characters.Add(t.CharacterHandler);
+                }
+            }
+        }
+        return characters;
     }
 
     private void MoveCharacter(LinkedList<Vector2Int> path)

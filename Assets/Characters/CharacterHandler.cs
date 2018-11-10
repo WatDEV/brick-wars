@@ -10,9 +10,15 @@ public class CharacterHandler : MonoBehaviour
     public Vector2Int[] Coordinates { get; set; }
     private LinkedList<Vector3> path;
     private LinkedList<Vector2Int> pathCoords;
-	public Action UpdateAttackArea;
+
+    public Action<Vector2Int[], int> ApplyDamage;
+    public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
-    private int movementSpeed = 20;
+
+    public int MovementSpeed = 20;
+    public int Damage = 110;
+    public int HitPoints = 100;
+
 	public GridRotation Rotation { get; set; }
 
 	public Func<Vector2Int[], bool> CanMove;
@@ -33,7 +39,6 @@ public class CharacterHandler : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         attackHash = Animator.StringToHash("StartAttack");
-        //anim.SetTrigger(attackHash);
     }
 
 
@@ -46,12 +51,6 @@ public class CharacterHandler : MonoBehaviour
             InitializeAttack();
     }
 
-    /*protected void Attack()
-    {
-        if (!IsAttacking || IsMoving)
-            return;
-    }
-    */
 	private void Rotate()
 	{
 		if (IsMoving)
@@ -121,7 +120,7 @@ public class CharacterHandler : MonoBehaviour
 
 			var vector = path.First.Value - transform.position;
 
-			transform.position += vector.normalized * movementSpeed * Time.deltaTime;
+			transform.position += vector.normalized * MovementSpeed * Time.deltaTime;
 		}
 	}
     protected virtual Quaternion RoundRotation(Quaternion targetRotation)
@@ -189,8 +188,19 @@ public class CharacterHandler : MonoBehaviour
         if (IsMoving || !IsSelected())
             return false;
 
+        ApplyDamage(GetAttackArea(), Damage);
+
         anim.SetTrigger(attackHash);
         return true;
+    } 
+
+    public void Hurt(int damage)
+    {
+        HitPoints -= damage;
+        if (HitPoints < 0)
+        {
+            Destroy(gameObject, 1);
+        }
     }
 
     public virtual void SetCoorinates(Vector2Int centerCoord)
