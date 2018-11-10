@@ -59,7 +59,7 @@ public class CharacterHighlight : MonoBehaviour
 		get
 		{
 			if (rend == null)
-				rend = GetComponent<Renderer>();
+				rend = GetComponentInChildren<Renderer>();
 
 			return rend;
 		}

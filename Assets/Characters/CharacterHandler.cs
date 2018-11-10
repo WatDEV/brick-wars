@@ -24,13 +24,34 @@ public class CharacterHandler : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    protected bool IsAttacking = false;
+
+    private Animator anim;
+    private int attackHash;
+
+    private void Start()
+    {
+        anim = GetComponentInChildren<Animator>();
+        attackHash = Animator.StringToHash("StartAttack");
+        //anim.SetTrigger(attackHash);
+    }
+
+
     void Update()
     {
 		Move();
 		Rotate();
+        //Attack();
+        if (Input.GetKeyDown(KeyCode.Space))
+            InitializeAttack();
     }
 
+    /*protected void Attack()
+    {
+        if (!IsAttacking || IsMoving)
+            return;
+    }
+    */
 	private void Rotate()
 	{
 		if (IsMoving)
@@ -54,7 +75,7 @@ public class CharacterHandler : MonoBehaviour
                 {
                     var previousRotation = Rotation;
                     Rotation = futureRotationEnum;
-                    if (!CanMove(GetFutureCoordinates(Coordinates[1])))
+                    if (!CanMove(GetFutureCoordinates(GetCenterCoord())))
                     {
                         Rotation = previousRotation;
                         return;
@@ -62,10 +83,17 @@ public class CharacterHandler : MonoBehaviour
 
 					transform.rotation = futureRotation;
 					UpdateAttackArea();
-				}
+                }
 			}
 		}
 	}
+
+    private Vector2Int GetCenterCoord()
+    {
+        if (Coordinates.Length == 3)
+            return Coordinates[1];
+        return Coordinates[0];
+    }
 
    	private void Move()
 	{
@@ -125,6 +153,27 @@ public class CharacterHandler : MonoBehaviour
 		}
 		return GridRotation.Down;
 	}
+
+    public void SetRotation(GridRotation r)
+    {
+        switch (r)
+        {
+            case GridRotation.Down:
+                transform.rotation = new Quaternion(0, 1, 0, 0);
+                break;
+            case GridRotation.Up:
+                transform.rotation = new Quaternion(0, 0, 0, 1);
+                break;
+            case GridRotation.Left:
+                transform.rotation = new Quaternion(0, -1, 0, 1);
+                break;
+            case GridRotation.Right:
+                transform.rotation = new Quaternion(0, 1, 0, 1);
+                break;
+        }
+        Rotation = r;
+    }
+
 	public void InitializeMovement(LinkedList<Vector3> path, LinkedList<Vector2Int> pathCoords)
     {
         if (!CanMove(GetFutureCoordinates(pathCoords.First.Value)))
@@ -133,6 +182,15 @@ public class CharacterHandler : MonoBehaviour
         }
         this.path = path;
         this.pathCoords = pathCoords;
+    }
+
+    public bool InitializeAttack()
+    {
+        if (IsMoving || !IsSelected())
+            return false;
+
+        anim.SetTrigger(attackHash);
+        return true;
     }
 
     public virtual void SetCoorinates(Vector2Int centerCoord)

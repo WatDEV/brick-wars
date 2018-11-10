@@ -280,11 +280,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridPrefab: {fileID: 1280587790974934, guid: 3011e879291e6ea4b839c790a85638d5, type: 2}
   Team1Actors:
-  - {fileID: 1384239641094092, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
-  - {fileID: 1528971866428778, guid: 1f8a0c67ac9768446bf9039c50e319f4, type: 2}
-  - {fileID: 1203576063881536, guid: df6be8f7f546682418cda7646deaac8e, type: 2}
-  - {fileID: 1445215641775076, guid: a67b0dceca50ab44588b04964fd6d75a, type: 2}
-  - {fileID: 1839833719965926, guid: b5a9e63514aa0ef4caa5bb5c20d6e6e4, type: 2}
+  - {fileID: 1934098008949582, guid: 7d295df553dc2474e9a3ec1ab6aaf6f6, type: 2}
+  - {fileID: 1751554290644658, guid: d03b2c806c7573142a56289a20aa0289, type: 2}
+  - {fileID: 1723809488355726, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
+  - {fileID: 1393330562820542, guid: abb9709c414411a49bb915c26a05823b, type: 2}
+  - {fileID: 1381373193497596, guid: e489637a79e012d42839b1ae3ff3ca31, type: 2}
   Team1Positions:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
@@ -292,9 +292,9 @@ MonoBehaviour:
   - {x: 4, y: 0}
   - {x: 6, y: 1}
   Team2Actors:
-  - {fileID: 1203576063881536, guid: df6be8f7f546682418cda7646deaac8e, type: 2}
-  - {fileID: 1384239641094092, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
-  - {fileID: 1528971866428778, guid: 1f8a0c67ac9768446bf9039c50e319f4, type: 2}
+  - {fileID: 1723809488355726, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
+  - {fileID: 1934098008949582, guid: 7d295df553dc2474e9a3ec1ab6aaf6f6, type: 2}
+  - {fileID: 1751554290644658, guid: d03b2c806c7573142a56289a20aa0289, type: 2}
   Team2Positions:
   - {x: 0, y: 9}
   - {x: 1, y: 9}

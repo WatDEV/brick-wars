@@ -68,14 +68,14 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team1[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponent<CharacterHighlight>(), m);
+            team1[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponentInChildren<CharacterHighlight>(), m);
             team1[i].CharacterHighlight.TeamNumber = 1;
             team1[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
 			team1[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
 
 			team1[i].CharacterHandler.SetCoorinates(new Vector2Int(Team1Positions[i].x, Team1Positions[i].y));
             team1[i].CharacterHandler.CanMove = CanMove;
-			team1[i].CharacterHandler.Rotation = Assets.GridRotation.Up;
+			team1[i].CharacterHandler.SetRotation(Assets.GridRotation.Up);
 			team1[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
 			i++;
         }
@@ -92,15 +92,15 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team2[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponent<CharacterHighlight>(), m);
+            team2[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponentInChildren<CharacterHighlight>(), m);
             team2[i].CharacterHighlight.TeamNumber = 2;
             team2[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
 			team2[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
 
 			team2[i].CharacterHandler.SetCoorinates(new Vector2Int(Team2Positions[i].x, Team2Positions[i].y));
-            team2[i].CharacterHandler.CanMove = CanMove;	
-			team2[i].CharacterHandler.Rotation = Assets.GridRotation.Down;
-			team2[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
+            team2[i].CharacterHandler.CanMove = CanMove;
+            team2[i].CharacterHandler.SetRotation(Assets.GridRotation.Down);
+            team2[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
 			i++;
         }
     }
@@ -133,12 +133,6 @@ public class Combat : MonoBehaviour
                 z = p.y * grid.Scale - grid.Offset,
                 y = SelectedCharacter.CharacterActor.transform.localScale.y / 2
             });
-			Debug.Log(new Vector3
-			{
-				x = p.x * grid.Scale - grid.Offset,
-				z = p.y * grid.Scale - grid.Offset,
-				y = SelectedCharacter.CharacterActor.transform.localScale.y / 2
-			});
         }
 
         SelectedCharacter.CharacterHandler.InitializeMovement(pathVec3, path);
