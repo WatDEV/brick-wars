@@ -15,11 +15,14 @@ public class CharacterHandler : MonoBehaviour
     public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
 
-    public int MovementSpeed = 20;
-    public int Damage = 110;
-    public int HitPoints = 100;
+    private int movementSpeed = 20;
+    private int damage = 110;
+    private int hitPoints = 100;
+    private int mobility = 8;
+    private int speed = 20;
+    private int resourceCost = 10;
 
-	public GridRotation Rotation { get; set; }
+    public GridRotation Rotation { get; set; }
 
 	public Func<Vector2Int[], bool> CanMove;
     public bool IsMoving
@@ -28,6 +31,48 @@ public class CharacterHandler : MonoBehaviour
         {
             return path == null || path.Count == 0 ? false : true; 
         }
+    }
+
+    [SerializeField]
+    public virtual int ResourceCost
+    {
+        get { return resourceCost; }
+        set { resourceCost = value; }
+    }
+
+    [SerializeField]
+    public virtual int Speed
+    { 
+        get{ return speed;}
+        set{ speed = value;}
+    }
+
+    [SerializeField]
+    public virtual int Mobility
+    {
+        get { return mobility; }
+        set { mobility = value; }
+    }
+
+    [SerializeField]
+    public virtual int HitPoints
+    {
+        get { return hitPoints; }
+        set { hitPoints = value; }
+    }
+
+    [SerializeField]
+    public virtual int Damage
+    {
+        get { return damage;}
+        set { damage = value;}
+    }
+
+    [SerializeField]
+    public virtual int MovementSpeed
+    {
+        get { return movementSpeed;}
+        set { movementSpeed = value; }
     }
 
     protected bool IsAttacking = false;
