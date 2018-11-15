@@ -74,7 +74,7 @@ public class GridMaker : MonoBehaviour
         if (Path == null || Path.Count == 0)
         {
             var canAddPath = false;
-            foreach (var charactersLocation in GetSelectedCharacter().CharacterHandler.Coordinates)
+            foreach (var charactersLocation in GetSelectedCharacter().CharacterMovement.Coordinates)
             {
                 if (Vector2Int.Distance(charactersLocation, coords) <= 1)
                 {
@@ -94,7 +94,7 @@ public class GridMaker : MonoBehaviour
 			return;
 
 		var selectedCharacter = GetSelectedCharacter();
-		if (selectedCharacter == null || selectedCharacter.CharacterHandler.IsMoving)
+		if (selectedCharacter == null || selectedCharacter.CharacterMovement.IsMoving)
             return;
 
 		foreach (var h in TileHighlighters)

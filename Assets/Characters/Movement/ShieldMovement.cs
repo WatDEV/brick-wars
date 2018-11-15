@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Characters
 {
-	class Shield : CharacterHandler
+	class ShieldMovement : CharacterMovement
 	{
         public override void SetCoorinates(Vector2Int centerCoord)
         {

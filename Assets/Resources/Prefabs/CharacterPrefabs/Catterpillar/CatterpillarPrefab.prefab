@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4899502949136790}
   - component: {fileID: 114877798804914856}
+  - component: {fileID: 114366591738249886}
+  - component: {fileID: 114122215319696648}
   m_Layer: 0
   m_Name: CatterpillarPrefab
   m_TagString: Untagged
@@ -146,6 +148,30 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114122215319696648
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1381373193497596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c1d4b4d3c64a941b8bdd51ea7c4dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114366591738249886
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1381373193497596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd56d2a9ef63e7f4a8533036629c6bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawn: {fileID: 1803958289294238, guid: c3479451800eb084c8d8cfe2e4182635,
+    type: 2}
 --- !u!114 &114810694447218260
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -165,6 +191,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1381373193497596}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb82964822b0d54fbf46ed540b18da1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6207fe7abb7189c4d8013949598bb4e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

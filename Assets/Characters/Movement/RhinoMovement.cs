@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Characters
 {
-	class Rhino : CharacterHandler
+	class RhinoMovement : CharacterMovement
 	{
         public override void SetCoorinates(Vector2Int centerCoord)
         {

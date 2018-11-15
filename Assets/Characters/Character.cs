@@ -4,16 +4,18 @@ namespace Assets.Characters
 {
     public class Character
     {
-        public readonly CharacterHandler CharacterHandler;
+        public readonly CharacterMovement CharacterMovement;
         public readonly CharacterHighlight CharacterHighlight;
+        public readonly CharacterAttributes CharacterAttributes;
         public readonly GameObject CharacterActor;
 
-        public Character(CharacterHandler characterHandler, CharacterHighlight characterHighlight, GameObject characterActor)
+        public Character(CharacterMovement characterMovement, CharacterHighlight characterHighlight, GameObject characterActor, CharacterAttributes characterAttributes)
         {
             CharacterActor = characterActor;
 			CharacterHighlight = characterHighlight;
-			CharacterHandler = characterHandler;
-			CharacterHandler.IsSelected = () => CharacterHighlight.State == CharacterHighlightEnum.Selected;
+            CharacterMovement = characterMovement;
+            CharacterAttributes = characterAttributes;
+            CharacterMovement.IsSelected = () => CharacterHighlight.State == CharacterHighlightEnum.Selected;
 		}
 	}
 }

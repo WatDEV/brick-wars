@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Characters
 {
-    class Caterpillar : CharacterHandler
+    class CaterpillarMovement : CharacterMovement
 	{
         public override void SetCoorinates(Vector2Int centerCoord)
         {
@@ -165,16 +165,14 @@ namespace Assets.Characters
 					};
 				case GridRotation.Left:
 					coords = Coordinates.FirstOrDefault(c => c.x == GetMinX());
-					coords.x -= 2;
-					coords.y += 1;
+					coords.x -= 1;
 					return new Vector2Int[]
 					{
 						coords
 					};
 				case GridRotation.Right:
 					coords = Coordinates.FirstOrDefault(c => c.x == GetMaxX());
-					coords.x += 2;
-					coords.y += 1;
+					coords.x += 1;
 					return new Vector2Int[]
 					{
 						coords

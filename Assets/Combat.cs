@@ -68,16 +68,16 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team1[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponentInChildren<CharacterHighlight>(), m);
+            team1[i] = new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>());
             team1[i].CharacterHighlight.TeamNumber = 1;
             team1[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
 			team1[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
 
-			team1[i].CharacterHandler.SetCoorinates(new Vector2Int(Team1Positions[i].x, Team1Positions[i].y));
-            team1[i].CharacterHandler.CanMove = CanMove;
-			team1[i].CharacterHandler.SetRotation(Assets.GridRotation.Up);
-			team1[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
-            team1[i].CharacterHandler.ApplyDamage = ApplyDamage;
+			team1[i].CharacterMovement.SetCoorinates(new Vector2Int(Team1Positions[i].x, Team1Positions[i].y));
+            team1[i].CharacterMovement.CanMove = CanMove;
+			team1[i].CharacterMovement.SetRotation(Assets.GridRotation.Up);
+			team1[i].CharacterMovement.UpdateAttackArea = UpdateAttackArea;
+            team1[i].CharacterMovement.ApplyDamage = ApplyDamage;
             i++;
         }
 
@@ -93,16 +93,16 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team2[i] = new Character(m.GetComponent<CharacterHandler>(), m.GetComponentInChildren<CharacterHighlight>(), m);
+            team2[i] = new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent< CharacterAttributes>());
             team2[i].CharacterHighlight.TeamNumber = 2;
             team2[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
 			team2[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
 
-			team2[i].CharacterHandler.SetCoorinates(new Vector2Int(Team2Positions[i].x, Team2Positions[i].y));
-            team2[i].CharacterHandler.CanMove = CanMove;
-            team2[i].CharacterHandler.SetRotation(Assets.GridRotation.Down);
-            team2[i].CharacterHandler.UpdateAttackArea = UpdateAttackArea;
-            team2[i].CharacterHandler.ApplyDamage = ApplyDamage;
+			team2[i].CharacterMovement.SetCoorinates(new Vector2Int(Team2Positions[i].x, Team2Positions[i].y));
+            team2[i].CharacterMovement.CanMove = CanMove;
+            team2[i].CharacterMovement.SetRotation(Assets.GridRotation.Down);
+            team2[i].CharacterMovement.UpdateAttackArea = UpdateAttackArea;
+            team2[i].CharacterMovement.ApplyDamage = ApplyDamage;
             i++;
         }
     }
@@ -126,16 +126,16 @@ public class Combat : MonoBehaviour
         GetCharactersInDamageArea(damageArea)?.ForEach(x => x.Hurt(damage));
     }
 
-    private List<CharacterHandler> GetCharactersInDamageArea(Vector2Int[] damageArea)
+    private List<CharacterAttributes> GetCharactersInDamageArea(Vector2Int[] damageArea)
     {
-        var characters = new List<CharacterHandler>();
+        var characters = new List<CharacterAttributes>();
         foreach(var t in team1)
         {
             foreach(var pos in damageArea)
             {
-                if(t.CharacterHandler.Coordinates.Contains(pos) && !characters.Contains(t.CharacterHandler))
+                if(t.CharacterMovement.Coordinates.Contains(pos) && !characters.Contains(t.CharacterAttributes))
                 {
-                    characters.Add(t.CharacterHandler);
+                    characters.Add(t.CharacterAttributes);
                 }
             }
         }
@@ -143,9 +143,9 @@ public class Combat : MonoBehaviour
         {
             foreach (var pos in damageArea)
             {
-                if (t.CharacterHandler.Coordinates.Contains(pos) && !characters.Contains(t.CharacterHandler))
+                if (t.CharacterMovement.Coordinates.Contains(pos) && !characters.Contains(t.CharacterAttributes))
                 {
-                    characters.Add(t.CharacterHandler);
+                    characters.Add(t.CharacterAttributes);
                 }
             }
         }
@@ -168,7 +168,7 @@ public class Combat : MonoBehaviour
             });
         }
 
-        SelectedCharacter.CharacterHandler.InitializeMovement(pathVec3, path);
+        SelectedCharacter.CharacterMovement.InitializeMovement(pathVec3, path);
     }
 
     public Character[] GetCharacters()
@@ -185,7 +185,7 @@ public class Combat : MonoBehaviour
 
             foreach(var c1 in coords)
             {
-                foreach (var c2 in character.CharacterHandler.Coordinates)
+                foreach (var c2 in character.CharacterMovement.Coordinates)
                 {
                     if (c1.Equals(c2))
                         return false;
@@ -201,7 +201,7 @@ public class Combat : MonoBehaviour
 		if (selectedCharacter == null)
 			return;
 
-		var coordsToHighlight = selectedCharacter.CharacterHandler.GetAttackArea();
+		var coordsToHighlight = selectedCharacter.CharacterMovement.GetAttackArea();
 		if (coordsToHighlight == null)
 			return;
 

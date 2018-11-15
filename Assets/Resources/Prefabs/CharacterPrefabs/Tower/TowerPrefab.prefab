@@ -39,7 +39,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4201554607254748}
-  - component: {fileID: 114117667583775738}
+  - component: {fileID: 114070871561695714}
+  - component: {fileID: 114368535277365420}
+  - component: {fileID: 114710023369160662}
   m_Layer: 0
   m_Name: TowerPrefab
   m_TagString: Untagged
@@ -146,7 +148,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114117667583775738
+--- !u!114 &114070871561695714
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,7 +156,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1934098008949582}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0b20b20aff70bb42b8d15ae949613e4, type: 3}
+  m_Script: {fileID: 11500000, guid: dd56d2a9ef63e7f4a8533036629c6bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawn: {fileID: 1803958289294238, guid: c3479451800eb084c8d8cfe2e4182635,
+    type: 2}
+--- !u!114 &114368535277365420
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1934098008949582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0256efeb4a4b142a69352a3473a600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114551652462520236
@@ -166,5 +181,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d57f2bc4fc17984bbf44b622fe39700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114710023369160662
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1934098008949582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c1d4b4d3c64a941b8bdd51ea7c4dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

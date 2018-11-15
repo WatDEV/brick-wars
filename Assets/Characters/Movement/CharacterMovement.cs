@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CharacterHandler : MonoBehaviour
+public class CharacterMovement : MonoBehaviour
 {
     public Vector2Int[] Coordinates { get; set; }
     private LinkedList<Vector3> path;
@@ -15,12 +15,28 @@ public class CharacterHandler : MonoBehaviour
     public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
 
-    private int movementSpeed = 20;
-    private int damage = 110;
-    private int hitPoints = 100;
-    private int mobility = 8;
-    private int speed = 20;
-    private int resourceCost = 10;
+    private CharacterAttributes attributes;
+
+    private int MovementSpeed
+    {
+        get
+        {
+            if (attributes == null)
+                attributes = GetComponent<CharacterAttributes>();
+
+            return attributes.MovementSpeed;
+        }
+    }
+    private int Damage
+    {
+        get
+        {
+            if (attributes == null)
+                attributes = GetComponent<CharacterAttributes>();
+
+            return attributes.Damage;
+        }
+    }
 
     public GridRotation Rotation { get; set; }
 
@@ -33,48 +49,7 @@ public class CharacterHandler : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public virtual int ResourceCost
-    {
-        get { return resourceCost; }
-        set { resourceCost = value; }
-    }
-
-    [SerializeField]
-    public virtual int Speed
-    { 
-        get{ return speed;}
-        set{ speed = value;}
-    }
-
-    [SerializeField]
-    public virtual int Mobility
-    {
-        get { return mobility; }
-        set { mobility = value; }
-    }
-
-    [SerializeField]
-    public virtual int HitPoints
-    {
-        get { return hitPoints; }
-        set { hitPoints = value; }
-    }
-
-    [SerializeField]
-    public virtual int Damage
-    {
-        get { return damage;}
-        set { damage = value;}
-    }
-
-    [SerializeField]
-    public virtual int MovementSpeed
-    {
-        get { return movementSpeed;}
-        set { movementSpeed = value; }
-    }
-
+   
     protected bool IsAttacking = false;
 
     private Animator anim;
@@ -91,7 +66,6 @@ public class CharacterHandler : MonoBehaviour
     {
 		Move();
 		Rotate();
-        //Attack();
         if (Input.GetKeyDown(KeyCode.Space))
             InitializeAttack();
     }
@@ -124,8 +98,9 @@ public class CharacterHandler : MonoBehaviour
                         Rotation = previousRotation;
                         return;
                     }
+                    SetCoorinates(GetCenterCoord());
 
-					transform.rotation = futureRotation;
+                    transform.rotation = futureRotation;
 					UpdateAttackArea();
                 }
 			}
@@ -238,15 +213,6 @@ public class CharacterHandler : MonoBehaviour
         anim.SetTrigger(attackHash);
         return true;
     } 
-
-    public void Hurt(int damage)
-    {
-        HitPoints -= damage;
-        if (HitPoints < 0)
-        {
-            Destroy(gameObject, 1);
-        }
-    }
 
     public virtual void SetCoorinates(Vector2Int centerCoord)
     {
