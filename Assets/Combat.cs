@@ -1,4 +1,5 @@
 ﻿using Assets.Characters;
+using InitativeNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,10 @@ public class Combat : MonoBehaviour
     public Vector2Int[] Team2Positions;
 
     private GridMaker grid;
-    private Character[] team1;
-    private Character[] team2;
+    private List<Character> team1;
+    private List<Character> team2;
+
+	private Initiative initative;
 
     public Character SelectedCharacter
     {
@@ -38,21 +41,43 @@ public class Combat : MonoBehaviour
         }
     }
 
-    // Use this for initialization
-    void Start()
-    {
-        var g = Instantiate(GridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        grid = g.GetComponent<GridMaker>();
-        grid.MoveCharacter += MoveCharacter;
-        grid.GetSelectedCharacter += () => { return SelectedCharacter; };
-        grid.GetCharacters += GetCharacters;
+	// Use this for initialization
+	void Start()
+	{
+		var g = Instantiate(GridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+		grid = g.GetComponent<GridMaker>();
+		grid.MoveCharacter += MoveCharacter;
+		grid.GetSelectedCharacter += () => { return SelectedCharacter; };
+		grid.GetCharacters += GetCharacters;
 
-        team1 = new Character[Team1Actors.Length];
-        team2 = new Character[Team2Actors.Length];
+		team1 = new List<Character>();
+		team2 = new List<Character>();
 
-        SpawnTeams();
+		SpawnTeams();
 
+		var teams = new List<Character>();
+		teams.AddRange(team1);
+		teams.AddRange(team2);
+		initative = new Initiative();
+		initative.Init(teams);
+
+		Next();
     }
+
+	public void Next()
+	{		
+		initative.Next().CharacterHighlight.Select();
+
+		if (team1.Count == 0)
+		{
+			Debug.Log("Team 2 won!");
+		}
+		if (team2.Count == 0)
+		{
+			Debug.Log("Team 1 won!");
+		}
+
+	}
 
     private void SpawnTeams()
     {
@@ -68,17 +93,20 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team1[i] = new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>());
+            team1.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>()));
             team1[i].CharacterHighlight.TeamNumber = 1;
             team1[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
-			team1[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
+			team1[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
 
 			team1[i].CharacterMovement.SetCoorinates(new Vector2Int(Team1Positions[i].x, Team1Positions[i].y));
-            team1[i].CharacterMovement.CanMove = CanMove;
+            team1[i].CharacterMovement.CanMove += CanMove;
 			team1[i].CharacterMovement.SetRotation(Assets.GridRotation.Up);
-			team1[i].CharacterMovement.UpdateAttackArea = UpdateAttackArea;
-            team1[i].CharacterMovement.ApplyDamage = ApplyDamage;
-            i++;
+			team1[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
+			team1[i].CharacterMovement.ApplyDamage += ApplyDamage;
+			team1[i].CharacterMovement.EndTurn += Next;
+
+			team1[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
+			i++;
         }
 
         i = 0;
@@ -93,16 +121,19 @@ public class Combat : MonoBehaviour
 
             var m = Instantiate(teamMember, position, Quaternion.identity);
 
-            team2[i] = new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent< CharacterAttributes>());
+            team2.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent< CharacterAttributes>()));
             team2[i].CharacterHighlight.TeamNumber = 2;
             team2[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
-			team2[i].CharacterHighlight.UpdateAttackArea = UpdateAttackArea;
+			team2[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
 
 			team2[i].CharacterMovement.SetCoorinates(new Vector2Int(Team2Positions[i].x, Team2Positions[i].y));
-            team2[i].CharacterMovement.CanMove = CanMove;
+            team2[i].CharacterMovement.CanMove += CanMove;
             team2[i].CharacterMovement.SetRotation(Assets.GridRotation.Down);
-            team2[i].CharacterMovement.UpdateAttackArea = UpdateAttackArea;
-            team2[i].CharacterMovement.ApplyDamage = ApplyDamage;
+            team2[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
+            team2[i].CharacterMovement.ApplyDamage += ApplyDamage;
+			team2[i].CharacterMovement.EndTurn += Next;
+
+			team2[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
             i++;
         }
     }
@@ -120,6 +151,14 @@ public class Combat : MonoBehaviour
                 tm.CharacterHighlight.Deselect();
         }
     }
+
+	private void RemoveFromArray(CharacterAttributes c)
+	{
+		var character = team1.FirstOrDefault(x => x.CharacterAttributes == c) ?? team2.FirstOrDefault(x => x.CharacterAttributes == c);
+
+		team1.Remove(character);
+		team2.Remove(character);
+	}
 
     private void ApplyDamage(Vector2Int[] damageArea, int damage)
     {

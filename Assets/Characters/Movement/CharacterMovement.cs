@@ -7,15 +7,18 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public Vector2Int[] Coordinates { get; set; }
-    private LinkedList<Vector3> path;
-    private LinkedList<Vector2Int> pathCoords;
+	public Vector2Int[] Coordinates { get; set; }
+	private LinkedList<Vector3> path;
+	private LinkedList<Vector2Int> pathCoords;
 
-    public Action<Vector2Int[], int> ApplyDamage;
-    public Action UpdateAttackArea;
+	public Action<Vector2Int[], int> ApplyDamage;
+	public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
+	public Action EndTurn;
 
     private CharacterAttributes attributes;
+
+	private float attackTimer = 0;
 
     private int MovementSpeed
     {
@@ -24,7 +27,7 @@ public class CharacterMovement : MonoBehaviour
             if (attributes == null)
                 attributes = GetComponent<CharacterAttributes>();
 
-            return attributes.MovementSpeed;
+            return attributes.movementSpeed;
         }
     }
     private int Damage
@@ -34,7 +37,7 @@ public class CharacterMovement : MonoBehaviour
             if (attributes == null)
                 attributes = GetComponent<CharacterAttributes>();
 
-            return attributes.Damage;
+            return attributes.damage;
         }
     }
 
@@ -55,7 +58,7 @@ public class CharacterMovement : MonoBehaviour
     private Animator anim;
     private int attackHash;
 
-    private void Start()
+    private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         attackHash = Animator.StringToHash("StartAttack");
@@ -68,7 +71,18 @@ public class CharacterMovement : MonoBehaviour
 		Rotate();
         if (Input.GetKeyDown(KeyCode.Space))
             InitializeAttack();
-    }
+
+		
+		if(attackTimer > 0)
+		{
+			attackTimer -= Time.deltaTime;
+			if(attackTimer <= 0)
+			{
+				attackTimer = 0;
+				EndTurn();
+			}
+		}
+    }	
 
 	private void Rotate()
 	{
@@ -211,6 +225,7 @@ public class CharacterMovement : MonoBehaviour
         ApplyDamage(GetAttackArea(), Damage);
 
         anim.SetTrigger(attackHash);
+		attackTimer = 1;
         return true;
     } 
 

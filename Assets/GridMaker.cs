@@ -31,7 +31,7 @@ public class GridMaker : MonoBehaviour
 		}
 	}
 
-	void Start ()
+	void Awake ()
 	{
 		if(TileGameObject == null)
 			TileGameObject = Resources.Load<GameObject>("Prefabs/TilePrefab");

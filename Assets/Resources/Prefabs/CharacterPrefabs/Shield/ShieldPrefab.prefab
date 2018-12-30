@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d57f2bc4fc17984bbf44b622fe39700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
 --- !u!114 &114447351853610202
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -181,6 +182,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c1d4b4d3c64a941b8bdd51ea7c4dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 20
+  damage: 110
+  hitPoints: 1
+  mobility: 8
+  resourceCost: 10
+  turnTimer: 0
 --- !u!114 &114757474931172896
 MonoBehaviour:
   m_ObjectHideFlags: 1

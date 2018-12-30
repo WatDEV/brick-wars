@@ -22,21 +22,21 @@ public class Destructible : MonoBehaviour {
 
         var trans = gameObject.transform.GetChild(0).transform;
 
-        for (var i = 0; i < trans.localScale.x; i += 4)
+        for (var i = 0; i < trans.localScale.x; i +=2)
         {
-            for (var j = 0; j < trans.localScale.y; j += 4)
+            for (var j = 0; j < trans.localScale.y; j +=2)
             {
-                for (var k = 0; k < trans.localScale.z; k += 4)
+                for (var k = 0; k < trans.localScale.z; k +=2)
                 {
                     var des = Instantiate(ObjectToSpawn);
-                    des.transform.localScale = new Vector3(4, 4, 4);
-                    des.transform.position = gameObject.transform.position + new Vector3(i, j, k);
+                    des.transform.localScale = new Vector3(2, 2, 2);
+                    des.transform.position = gameObject.transform.position + new Vector3(i, j, k) - new Vector3(trans.localScale.x/2, trans.localScale.y / 2, trans.localScale.z / 2);
                     des.transform.rotation = gameObject.transform.rotation;
-                    des.GetComponent<Rigidbody>().AddForce(new Vector3(0,
-                        0,
-                        0) * 50000);
+                    des.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1f,1f),
+						Random.Range(-1f, 1f),
+						Random.Range(-1f, 1f)) * Random.Range(trans.localScale.x * trans.localScale.y * trans.localScale.z / 2, trans.localScale.x * trans.localScale.y * trans.localScale.z));
                     des.GetComponentInChildren<Renderer>().material = gameObject.GetComponentInChildren<CharacterHighlight>().Material;
-                    Destroy(des, 2);
+                    Destroy(des, 1.5f);
                 }
             }
         }

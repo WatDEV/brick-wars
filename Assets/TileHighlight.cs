@@ -63,7 +63,7 @@ public class TileHighlight : MonoBehaviour
 
 
 	// Use this for initialization
-	void Start()
+	void Awake()
 	{
 		State = TileHighlightEnum.Default;
 	}

@@ -11,7 +11,7 @@ public class CharacterHighlight : MonoBehaviour
 	private Material selected;
 	public Action<CharacterHighlight> DeselectAllOther;
 	public Action UpdateAttackArea;
-	private CharacterHighlightEnum state;
+	public CharacterHighlightEnum state;
 	public CharacterHighlightEnum State
 	{
 		get
@@ -65,7 +65,7 @@ public class CharacterHighlight : MonoBehaviour
 		}
 	}
 
-	void OnMouseEnter()
+	/*void OnMouseEnter()
 	{
 		if (state != CharacterHighlightEnum.Selected)
 			state = CharacterHighlightEnum.Highlighted;
@@ -88,14 +88,14 @@ public class CharacterHighlight : MonoBehaviour
 		{
 			state = CharacterHighlightEnum.Default;
 		}
-	}
+	}*/
 
 	void Update()
 	{
 		UpdateMaterial();
 	}
 
-	void Start()
+	void Awake()
 	{
 		state = CharacterHighlightEnum.Default;
 	}
@@ -105,5 +105,11 @@ public class CharacterHighlight : MonoBehaviour
 		Renderer.material = Material;
 	}
 
+	public void Select()
+	{
+		state = CharacterHighlightEnum.Selected;
+		DeselectAllOther(this);
+		UpdateAttackArea();
+	}
 	public void Deselect() => state = CharacterHighlightEnum.Default;
 }
