@@ -7,17 +7,15 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
-    [SerializeField]
+    public Player Player1;
+    public Player Player2;
+
     public GameObject GridPrefab;
 
-    [SerializeField]
     public GameObject[] Team1Actors;
-    [SerializeField]
     public Vector2Int[] Team1Positions;
 
-    [SerializeField]
     public GameObject[] Team2Actors;
-    [SerializeField]
     public Vector2Int[] Team2Positions;
 
     private GridMaker grid;

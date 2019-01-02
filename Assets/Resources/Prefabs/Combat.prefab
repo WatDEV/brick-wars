@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1562248344726758}
+  m_IsPrefabAsset: 1
+--- !u!1 &1562248344726758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4276676213874386}
+  - component: {fileID: 114962379148908336}
+  m_Layer: 0
+  m_Name: Combat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4276676213874386
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1562248344726758}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.731659, y: 6.93003, z: 39.775787}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114962379148908336
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1562248344726758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66c039c786655e459b0f5c596528f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GridPrefab: {fileID: 1280587790974934, guid: 3011e879291e6ea4b839c790a85638d5, type: 2}
+  Team1Actors:
+  - {fileID: 1934098008949582, guid: 7d295df553dc2474e9a3ec1ab6aaf6f6, type: 2}
+  - {fileID: 1751554290644658, guid: d03b2c806c7573142a56289a20aa0289, type: 2}
+  - {fileID: 1723809488355726, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
+  - {fileID: 1393330562820542, guid: abb9709c414411a49bb915c26a05823b, type: 2}
+  - {fileID: 1381373193497596, guid: e489637a79e012d42839b1ae3ff3ca31, type: 2}
+  Team1Positions:
+  - {x: 10, y: 10}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  - {x: 4, y: 0}
+  - {x: 6, y: 1}
+  Team2Actors:
+  - {fileID: 1723809488355726, guid: 23bf97ae4b202ae45b3da92c6895f72f, type: 2}
+  - {fileID: 1934098008949582, guid: 7d295df553dc2474e9a3ec1ab6aaf6f6, type: 2}
+  - {fileID: 1751554290644658, guid: d03b2c806c7573142a56289a20aa0289, type: 2}
+  Team2Positions:
+  - {x: 0, y: 9}
+  - {x: 1, y: 9}
+  - {x: 2, y: 9}

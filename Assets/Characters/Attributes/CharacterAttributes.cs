@@ -9,7 +9,6 @@ public class CharacterAttributes : MonoBehaviour {
 	public int damage = 110;
 	public int hitPoints = 100;
 	public int mobility = 8;
-	public int resourceCost = 10;
 	public int turnTimer = 0;
 
 	public Action<CharacterAttributes> RemoveFromArray;
