@@ -13,6 +13,7 @@ public class CharacterAttributes : MonoBehaviour {
 	public int turnTimer = 0;
     public int mobilityLeft = 8;
     public bool hasAttacked = false;
+    public bool isStunned = false;
 
     public GameObject HealthBarGO;
     private HealthBarScript healthBar;

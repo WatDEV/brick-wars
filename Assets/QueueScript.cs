@@ -26,6 +26,9 @@ public class QueueScript : MonoBehaviour {
         foreach (var c in queue)
         {
             Images[i].sprite = GetSprite(c);
+            Images[i].color = c.CharacterAttributes.isStunned?
+                new Color(0.3f,0.3f,0.3f):
+                new Color(1f,1f,1f);
             i++;
             if (i >= 10)
                 break;

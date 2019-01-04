@@ -10,8 +10,9 @@ public class CharacterMovement : MonoBehaviour
 	public Vector2Int[] Coordinates { get; set; }
 	private LinkedList<Vector3> path;
 	private LinkedList<Vector2Int> pathCoords;
+    public bool hasStunAttack = false;
 
-	public Action<List<Tuple<Vector2Int, int>>> ApplyDamage;
+	public Action<List<Tuple<Vector2Int, int>>,bool> ApplyDamage;
 	public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
 
@@ -209,7 +210,7 @@ public class CharacterMovement : MonoBehaviour
         if (IsMoving || !IsSelected())
             return false;
 
-        ApplyDamage(GetDamage());
+        ApplyDamage(GetDamage(), hasStunAttack);
 
         anim.SetTrigger(attackHash);
 		attackTimer = 1;

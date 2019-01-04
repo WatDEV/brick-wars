@@ -352,6 +352,7 @@ MonoBehaviour:
   turnTimer: 0
   mobilityLeft: 16
   hasAttacked: 0
+  isStunned: 0
   HealthBarGO: {fileID: 1743704379233152}
 --- !u!114 &114771935844709176
 MonoBehaviour:
@@ -364,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f5e932ca3ee504686f0176e6415665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasStunAttack: 1
   MovementSpeed: 20
 --- !u!114 &114775752512869424
 MonoBehaviour:

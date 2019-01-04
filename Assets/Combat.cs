@@ -69,13 +69,26 @@ public class Combat : MonoBehaviour
 
     public void Next()
     {
-        Queue.UpdateSprites(initative.Queue);
 
-        var characterOnTurn = initative.Next();
-        characterOnTurn.CharacterAttributes.NewTurn();
-        characterOnTurn.CharacterHighlight.Select();
+        while (true)
+        {
+            Queue.UpdateSprites(initative.Queue);
 
-        BattleUIScript.UpdateCharacterOnTurnState(characterOnTurn);
+            var characterOnTurn = initative.Next();
+
+            if (characterOnTurn.CharacterAttributes.isStunned == false)
+            {
+                characterOnTurn.CharacterAttributes.NewTurn();
+                characterOnTurn.CharacterHighlight.Select();
+
+                BattleUIScript.UpdateCharacterOnTurnState(characterOnTurn);
+                break;
+            }
+            else
+            {
+                characterOnTurn.CharacterAttributes.isStunned = false;
+            }
+        }
 
         if (team1.Count == 0)
         {
@@ -169,7 +182,7 @@ public class Combat : MonoBehaviour
         team2.Remove(character);
     }
 
-    private void ApplyDamage(List<Tuple<Vector2Int, int>> damages)
+    private void ApplyDamage(List<Tuple<Vector2Int, int>> damages, bool isStunAttack)
     {
         foreach (var t in GetCharacters())
         {
@@ -181,6 +194,8 @@ public class Combat : MonoBehaviour
                 if (t.CharacterMovement.Coordinates.Contains(d.Item1))
                 {
                     t.CharacterAttributes.Hurt(d.Item2);
+                    if(!t.CharacterAttributes.isStunned && isStunAttack)
+                        t.CharacterAttributes.isStunned = true;
                 }
             }
         }
