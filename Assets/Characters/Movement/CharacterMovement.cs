@@ -11,26 +11,17 @@ public class CharacterMovement : MonoBehaviour
 	private LinkedList<Vector3> path;
 	private LinkedList<Vector2Int> pathCoords;
 
-	public Action<Vector2Int[], int> ApplyDamage;
+	public Action<List<Tuple<Vector2Int, int>>> ApplyDamage;
 	public Action UpdateAttackArea;
 	public Func<bool> IsSelected;
-	public Action EndTurn;
 
     private CharacterAttributes attributes;
 
 	private float attackTimer = 0;
 
-    private int MovementSpeed
-    {
-        get
-        {
-            if (attributes == null)
-                attributes = GetComponent<CharacterAttributes>();
+    public int MovementSpeed = 20;
 
-            return attributes.movementSpeed;
-        }
-    }
-    private int Damage
+    protected int Damage
     {
         get
         {
@@ -51,7 +42,6 @@ public class CharacterMovement : MonoBehaviour
             return path == null || path.Count == 0 ? false : true; 
         }
     }
-
    
     protected bool IsAttacking = false;
 
@@ -69,9 +59,6 @@ public class CharacterMovement : MonoBehaviour
     {
 		Move();
 		Rotate();
-        if (Input.GetKeyDown(KeyCode.Space))
-            InitializeAttack();
-
 		
 		if(attackTimer > 0)
 		{
@@ -79,7 +66,6 @@ public class CharacterMovement : MonoBehaviour
 			if(attackTimer <= 0)
 			{
 				attackTimer = 0;
-				EndTurn();
 			}
 		}
     }	
@@ -112,7 +98,7 @@ public class CharacterMovement : MonoBehaviour
                         Rotation = previousRotation;
                         return;
                     }
-                    SetCoorinates(GetCenterCoord());
+                    SetCoordinates(GetCenterCoord());
 
                     transform.rotation = futureRotation;
 					UpdateAttackArea();
@@ -121,7 +107,7 @@ public class CharacterMovement : MonoBehaviour
 		}
 	}
 
-    private Vector2Int GetCenterCoord()
+    public Vector2Int GetCenterCoord()
     {
         if (Coordinates.Length == 3)
             return Coordinates[1];
@@ -135,7 +121,7 @@ public class CharacterMovement : MonoBehaviour
 			if (Vector3.Distance(path.First.Value, transform.position) < 0.15)
 			{
 				path.RemoveFirst();
-				SetCoorinates(pathCoords.First.Value);
+				SetCoordinates(pathCoords.First.Value);
 				pathCoords.RemoveFirst();
 				UpdateAttackArea();
 
@@ -207,14 +193,15 @@ public class CharacterMovement : MonoBehaviour
         Rotation = r;
     }
 
-	public void InitializeMovement(LinkedList<Vector3> path, LinkedList<Vector2Int> pathCoords)
+	public bool InitializeMovement(LinkedList<Vector3> path, LinkedList<Vector2Int> pathCoords)
     {
         if (!CanMove(GetFutureCoordinates(pathCoords.First.Value)))
         {
-            return;
+            return false;
         }
         this.path = path;
         this.pathCoords = pathCoords;
+        return true;
     }
 
     public bool InitializeAttack()
@@ -222,15 +209,25 @@ public class CharacterMovement : MonoBehaviour
         if (IsMoving || !IsSelected())
             return false;
 
-        ApplyDamage(GetAttackArea(), Damage);
+        ApplyDamage(GetDamage());
 
         anim.SetTrigger(attackHash);
 		attackTimer = 1;
         return true;
     } 
 
-    public virtual void SetCoorinates(Vector2Int centerCoord)
+    protected virtual List<Tuple<Vector2Int,int>> GetDamage()
     {
+        return null;
+    }
+
+    public virtual void SetCoordinates(Vector2Int centerCoord)
+    {
+    }
+
+    public virtual Vector2Int[] GetCoordinates(Vector2Int centerCoord)
+    {
+        return null;
     }
 
     public virtual Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)

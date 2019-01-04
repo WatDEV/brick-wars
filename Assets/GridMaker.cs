@@ -1,6 +1,5 @@
 ﻿using Assets.Characters;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,9 +17,13 @@ public class GridMaker : MonoBehaviour
     public Func<Character> GetSelectedCharacter;
     public Func<Character[]> GetCharacters;
 
-    public LinkedList<Vector2Int> Path { get; set; } = new LinkedList<Vector2Int>();
+    public Action<Vector2Int> SetFirstPosition;
+    public Func<bool> IsFirstTurn;
 
-	[SerializeField]
+    public LinkedList<Vector2Int> Path { get; set; } = new LinkedList<Vector2Int>();
+    public LinkedList<Pathfinder> Pathfinders { get; set; } = new LinkedList<Pathfinder>();
+
+    [SerializeField]
 	public int Size { get; set; } = 20;
 
 	public int Offset
@@ -52,13 +55,24 @@ public class GridMaker : MonoBehaviour
                 tile.Coordinates = new Vector2Int(i, j);
 				tile.FinishPath += FinishPath;
 				tile.AddPath += AddPath;
+                Pathfinders.AddLast(tile);
 
 				TileGrid[i, j] = cube;
 			}
 		}
 	}
 
-	private bool AddPath(Vector2Int coords)
+
+    public void Start()
+    {
+        foreach(var tile in Pathfinders)
+        {
+            tile.SetFirstPosition += SetFirstPosition;
+            tile.IsFirstTurn += IsFirstTurn;
+        }
+    }
+
+    private bool AddPath(Vector2Int coords)
 	{
         var selectedCharLocations = GetSelectedCharacter();
         if (selectedCharLocations == null)
@@ -70,8 +84,10 @@ public class GridMaker : MonoBehaviour
         if (Path.Last != null && Vector2Int.Distance(Path.Last.Value, coords) > 1)
             return false;
 
-        //TODO move to function it is too big (if you can move with big brick)
-        if (Path == null || Path.Count == 0)
+        if (Path.Count >= selectedCharLocations.CharacterAttributes.mobilityLeft)
+            return false;
+
+        if ((Path == null || Path.Count == 0 ) && GetSelectedCharacter().CharacterMovement.Coordinates != null)
         {
             var canAddPath = false;
             foreach (var charactersLocation in GetSelectedCharacter().CharacterMovement.Coordinates)

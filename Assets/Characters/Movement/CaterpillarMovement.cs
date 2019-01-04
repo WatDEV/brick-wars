@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Characters
 {
     class CaterpillarMovement : CharacterMovement
 	{
-        public override void SetCoorinates(Vector2Int centerCoord)
+        public override void SetCoordinates(Vector2Int centerCoord)
         {
             switch (Rotation)
             {
@@ -74,6 +76,74 @@ namespace Assets.Characters
                     };
                     break;
             }
+        }
+
+        public override Vector2Int[] GetCoordinates(Vector2Int centerCoord)
+        {
+            switch (Rotation)
+            {
+                case GridRotation.Up:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+                case GridRotation.Down:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+                case GridRotation.Left:
+                    return new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+                case GridRotation.Right:
+                    return new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+            }
+            return null;
         }
 
         public override Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)
@@ -145,8 +215,11 @@ namespace Assets.Characters
             return null;
         }
 		public override Vector2Int[] GetAttackArea()
-		{
-			Vector2Int coords;
+        {
+            if (Coordinates == null)
+                return null;
+
+            Vector2Int coords;
 			switch (Rotation)
 			{
 				case GridRotation.Up:
@@ -215,6 +288,15 @@ namespace Assets.Characters
 				min = min > c.y ? c.y : min;
 			}
 			return min;
-		}
-	}
+        }
+        protected override List<Tuple<Vector2Int, int>> GetDamage()
+        {
+            var damages = new List<Tuple<Vector2Int, int>>();
+            foreach (var c in GetAttackArea())
+            {
+                damages.Add(new Tuple<Vector2Int, int>(c, Damage));
+            }
+            return damages;
+        }
+    }
 }

@@ -1,5 +1,7 @@
 ﻿using Assets.Characters;
+using Assets.Enums;
 using InitativeNamespace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +14,19 @@ public class Combat : MonoBehaviour
 
     public GameObject GridPrefab;
 
-    public GameObject[] Team1Actors;
-    public Vector2Int[] Team1Positions;
-
-    public GameObject[] Team2Actors;
-    public Vector2Int[] Team2Positions;
+    public GameObject RhinoPrefab;
+    public GameObject TowerPrefab;
+    public GameObject ShieldPrefab;
+    public GameObject CatterpillarPrefab;
+    public GameObject JumperPrefab;
+    public QueueScript Queue;
+    public BattleUIScript BattleUIScript;
 
     private GridMaker grid;
     private List<Character> team1;
     private List<Character> team2;
 
-	private Initiative initative;
+    private Initiative initative;
 
     public Character SelectedCharacter
     {
@@ -33,107 +37,114 @@ public class Combat : MonoBehaviour
                     return c;
 
             foreach (var c in team2)
-				if (c.CharacterHighlight.State == CharacterHighlightEnum.Selected)
-					return c;
+                if (c.CharacterHighlight.State == CharacterHighlightEnum.Selected)
+                    return c;
             return null;
         }
     }
 
-	// Use this for initialization
-	void Start()
-	{
-		var g = Instantiate(GridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-		grid = g.GetComponent<GridMaker>();
-		grid.MoveCharacter += MoveCharacter;
-		grid.GetSelectedCharacter += () => { return SelectedCharacter; };
-		grid.GetCharacters += GetCharacters;
+    void Start()
+    {
+        var g = Instantiate(GridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        grid = g.GetComponent<GridMaker>();
+        grid.MoveCharacter += MoveCharacter;
+        grid.GetSelectedCharacter += () => { return SelectedCharacter; };
+        grid.GetCharacters += GetCharacters;
+        grid.IsFirstTurn += IsFirstTurn;
+        grid.SetFirstPosition += SetInitialCharacterPosition;
 
-		team1 = new List<Character>();
-		team2 = new List<Character>();
+        team1 = new List<Character>();
+        team2 = new List<Character>();
 
-		SpawnTeams();
+        InitializeTeams();
 
-		var teams = new List<Character>();
-		teams.AddRange(team1);
-		teams.AddRange(team2);
-		initative = new Initiative();
-		initative.Init(teams);
+        var teams = new List<Character>();
+        teams.AddRange(team1);
+        teams.AddRange(team2);
+        initative = new Initiative();
+        initative.Init(teams);
 
-		Next();
+        Next();
     }
 
-	public void Next()
-	{		
-		initative.Next().CharacterHighlight.Select();
+    public void Next()
+    {
+        Queue.UpdateSprites(initative.Queue);
 
-		if (team1.Count == 0)
-		{
-			Debug.Log("Team 2 won!");
-		}
-		if (team2.Count == 0)
-		{
-			Debug.Log("Team 1 won!");
-		}
+        var characterOnTurn = initative.Next();
+        characterOnTurn.CharacterAttributes.NewTurn();
+        characterOnTurn.CharacterHighlight.Select();
 
-	}
+        BattleUIScript.UpdateCharacterOnTurnState(characterOnTurn);
 
-    private void SpawnTeams()
+        if (team1.Count == 0)
+        {
+            Debug.Log("Team 2 won!");
+        }
+        if (team2.Count == 0)
+        {
+            Debug.Log("Team 1 won!");
+        }
+
+    }
+
+    private void InitializeTeams()
     {
         var i = 0;
-        foreach (var teamMember in Team1Actors)
+        foreach (var teamMember in Player1.Team)
         {
-            var position = new Vector3
-            {
-                x = Team1Positions[i].x * grid.Scale - grid.Offset,
-                z = Team1Positions[i].y * grid.Scale - grid.Offset,
-                y = teamMember.transform.localScale.y / 2
-            };
+            var m = Instantiate(GetBrickPrefab(teamMember), new Vector3(9999, 9999, 9999), Quaternion.identity);
 
-            var m = Instantiate(teamMember, position, Quaternion.identity);
-
-            team1.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>()));
+            team1.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>(), teamMember, 1));
             team1[i].CharacterHighlight.TeamNumber = 1;
             team1[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
-			team1[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
+            team1[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
 
-			team1[i].CharacterMovement.SetCoorinates(new Vector2Int(Team1Positions[i].x, Team1Positions[i].y));
             team1[i].CharacterMovement.CanMove += CanMove;
-			team1[i].CharacterMovement.SetRotation(Assets.GridRotation.Up);
-			team1[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
-			team1[i].CharacterMovement.ApplyDamage += ApplyDamage;
-			team1[i].CharacterMovement.EndTurn += Next;
+            team1[i].CharacterMovement.SetRotation(Assets.GridRotation.Up);
+            team1[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
+            team1[i].CharacterMovement.ApplyDamage += ApplyDamage;
 
-			team1[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
-			i++;
+            team1[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
+            i++;
         }
 
         i = 0;
-        foreach (var teamMember in Team2Actors)
+        foreach (var teamMember in Player2.Team)
         {
-            var position = new Vector3
-            {
-                x = Team2Positions[i].x * grid.Scale - grid.Offset,
-                z = Team2Positions[i].y * grid.Scale - grid.Offset,
-                y = teamMember.transform.localScale.y / 2
-            };
+            var m = Instantiate(GetBrickPrefab(teamMember), new Vector3(9999, 9999, 9999), Quaternion.identity);
 
-            var m = Instantiate(teamMember, position, Quaternion.identity);
-
-            team2.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent< CharacterAttributes>()));
+            team2.Add(new Character(m.GetComponent<CharacterMovement>(), m.GetComponentInChildren<CharacterHighlight>(), m, m.GetComponent<CharacterAttributes>(), teamMember, 2));
             team2[i].CharacterHighlight.TeamNumber = 2;
             team2[i].CharacterHighlight.DeselectAllOther += DeselectAllOther;
-			team2[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
+            team2[i].CharacterHighlight.UpdateAttackArea += UpdateAttackArea;
 
-			team2[i].CharacterMovement.SetCoorinates(new Vector2Int(Team2Positions[i].x, Team2Positions[i].y));
             team2[i].CharacterMovement.CanMove += CanMove;
             team2[i].CharacterMovement.SetRotation(Assets.GridRotation.Down);
             team2[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
             team2[i].CharacterMovement.ApplyDamage += ApplyDamage;
-			team2[i].CharacterMovement.EndTurn += Next;
 
-			team2[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
+            team2[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
             i++;
         }
+    }
+
+    private GameObject GetBrickPrefab(CharacterEnum c)
+    {
+        switch (c)
+        {
+            case CharacterEnum.Jumper:
+                return JumperPrefab;
+            case CharacterEnum.Tower:
+                return TowerPrefab;
+            case CharacterEnum.Shield:
+                return ShieldPrefab;
+            case CharacterEnum.Rhino:
+                return RhinoPrefab;
+            case CharacterEnum.Worm:
+                return CatterpillarPrefab;
+        }
+        return null;
     }
 
     private void DeselectAllOther(CharacterHighlight characterHighlight)
@@ -150,43 +161,29 @@ public class Combat : MonoBehaviour
         }
     }
 
-	private void RemoveFromArray(CharacterAttributes c)
-	{
-		var character = team1.FirstOrDefault(x => x.CharacterAttributes == c) ?? team2.FirstOrDefault(x => x.CharacterAttributes == c);
-
-		team1.Remove(character);
-		team2.Remove(character);
-	}
-
-    private void ApplyDamage(Vector2Int[] damageArea, int damage)
+    private void RemoveFromArray(CharacterAttributes c)
     {
-        GetCharactersInDamageArea(damageArea)?.ForEach(x => x.Hurt(damage));
+        var character = team1.FirstOrDefault(x => x.CharacterAttributes == c) ?? team2.FirstOrDefault(x => x.CharacterAttributes == c);
+
+        team1.Remove(character);
+        team2.Remove(character);
     }
 
-    private List<CharacterAttributes> GetCharactersInDamageArea(Vector2Int[] damageArea)
+    private void ApplyDamage(List<Tuple<Vector2Int, int>> damages)
     {
-        var characters = new List<CharacterAttributes>();
-        foreach(var t in team1)
+        foreach (var t in GetCharacters())
         {
-            foreach(var pos in damageArea)
+            foreach (var d in damages)
             {
-                if(t.CharacterMovement.Coordinates.Contains(pos) && !characters.Contains(t.CharacterAttributes))
+                if (t.CharacterMovement.Coordinates == null)
+                    continue;
+
+                if (t.CharacterMovement.Coordinates.Contains(d.Item1))
                 {
-                    characters.Add(t.CharacterAttributes);
+                    t.CharacterAttributes.Hurt(d.Item2);
                 }
             }
         }
-        foreach (var t in team2)
-        {
-            foreach (var pos in damageArea)
-            {
-                if (t.CharacterMovement.Coordinates.Contains(pos) && !characters.Contains(t.CharacterAttributes))
-                {
-                    characters.Add(t.CharacterAttributes);
-                }
-            }
-        }
-        return characters;
     }
 
     private void MoveCharacter(LinkedList<Vector2Int> path)
@@ -205,7 +202,11 @@ public class Combat : MonoBehaviour
             });
         }
 
-        SelectedCharacter.CharacterMovement.InitializeMovement(pathVec3, path);
+        if (SelectedCharacter.CharacterMovement.InitializeMovement(pathVec3, path))
+        {
+            SelectedCharacter.CharacterAttributes.mobilityLeft -= path.Count;
+            BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
+        }
     }
 
     public Character[] GetCharacters()
@@ -215,12 +216,12 @@ public class Combat : MonoBehaviour
 
     private bool CanMove(Vector2Int[] coords)
     {
-        foreach(var character in GetCharacters())
+        foreach (var character in GetCharacters())
         {
-            if (character.CharacterHighlight.State == CharacterHighlightEnum.Selected)
+            if (character.CharacterHighlight.State == CharacterHighlightEnum.Selected || character.CharacterMovement.Coordinates == null)
                 continue;
 
-            foreach(var c1 in coords)
+            foreach (var c1 in coords)
             {
                 foreach (var c2 in character.CharacterMovement.Coordinates)
                 {
@@ -232,16 +233,59 @@ public class Combat : MonoBehaviour
 
         return true;
     }
-	private void UpdateAttackArea()
-	{
-		var selectedCharacter = SelectedCharacter;
-		if (selectedCharacter == null)
-			return;
+    private void UpdateAttackArea()
+    {
+        var selectedCharacter = SelectedCharacter;
+        if (selectedCharacter == null)
+            return;
 
-		var coordsToHighlight = selectedCharacter.CharacterMovement.GetAttackArea();
-		if (coordsToHighlight == null)
-			return;
+        var coordsToHighlight = selectedCharacter.CharacterMovement.GetAttackArea();
+        if (coordsToHighlight == null)
+            return;
 
-		grid.HighlighAttackArea(coordsToHighlight);
-	}
+        grid.HighlighAttackArea(coordsToHighlight);
+    }
+
+    private bool IsFirstTurn()
+    {
+        var selectedCharacter = SelectedCharacter;
+        if (selectedCharacter == null)
+            return false;
+
+        if (selectedCharacter.CharacterMovement.Coordinates == null)
+            return true;
+
+        return false;
+    }
+
+    private void SetInitialCharacterPosition(Vector2Int pos)
+    {
+        var selectedCharacter = SelectedCharacter;
+        if (selectedCharacter == null || !CanMove(selectedCharacter.CharacterMovement.GetCoordinates(pos)))
+            return;
+
+
+        selectedCharacter.CharacterMovement.SetCoordinates(pos);
+
+        var position = new Vector3
+        {
+            x = pos.x * grid.Scale - grid.Offset,
+            z = pos.y * grid.Scale - grid.Offset,
+            y = selectedCharacter.CharacterActor.transform.localScale.y / 2
+        };
+
+        selectedCharacter.CharacterActor.transform.position = position;
+
+        Next();
+    }
+
+    public void Attack()
+    {
+        var selectedCharacter = SelectedCharacter;
+        if (selectedCharacter == null || selectedCharacter.CharacterAttributes.hasAttacked == true)
+            return;
+
+        selectedCharacter.CharacterAttributes.hasAttacked = selectedCharacter.CharacterMovement.InitializeAttack();
+        BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
+    }
 }

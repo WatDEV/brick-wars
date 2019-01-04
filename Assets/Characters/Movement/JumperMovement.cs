@@ -8,19 +8,29 @@ namespace Assets.Characters
 {
 	class JumperMovement : CharacterMovement
 	{
-        public override void SetCoorinates(Vector2Int centerCoord)
+        public override void SetCoordinates(Vector2Int centerCoord)
         {
             Coordinates = new Vector2Int[]
             {
                 centerCoord
             };
         }
+        public override Vector2Int[] GetCoordinates(Vector2Int centerCoord)
+        {
+            return new Vector2Int[]
+            {
+                centerCoord
+            };
+        }
+
         public override Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)
         {
             return new Vector2Int[] { futureCoords };
         }
 		public override Vector2Int[] GetAttackArea()
 		{
+            if (Coordinates == null)
+                return null;
 
 			var coords = Coordinates[0];
 			switch (Rotation)
@@ -51,6 +61,17 @@ namespace Assets.Characters
 					};
 			}
 			return base.GetAttackArea();
-		}
-	}
+        }
+
+        protected override List<Tuple<Vector2Int, int>> GetDamage()
+        {
+            var damages = new List<Tuple<Vector2Int, int>>();
+            foreach (var c in GetAttackArea())
+            {
+                damages.Add(new Tuple<Vector2Int, int>(c, Damage));
+            }
+            return damages;
+        }
+    }
+
 }

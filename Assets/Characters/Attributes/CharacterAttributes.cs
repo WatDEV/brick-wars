@@ -7,15 +7,24 @@ public class CharacterAttributes : MonoBehaviour {
 
     public int movementSpeed = 20;
 	public int damage = 110;
-	public int hitPoints = 100;
-	public int mobility = 8;
+    public int hitPoints = 100;
+    public int maxHitPoints = 100;
+    public int mobility = 8;
 	public int turnTimer = 0;
+    public int mobilityLeft = 8;
+    public bool hasAttacked = false;
+
+    public GameObject HealthBarGO;
+    private HealthBarScript healthBar;
 
 	public Action<CharacterAttributes> RemoveFromArray;
+    public Action<CharacterAttributes> RemoveFromQueue;
 
     // Use this for initialization
     void Start () {
-		
+        healthBar = HealthBarGO.GetComponent<HealthBarScript>();
+        hitPoints = maxHitPoints;
+        healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
 	}
 	
 	// Update is called once per frame
@@ -25,10 +34,12 @@ public class CharacterAttributes : MonoBehaviour {
     public void Hurt(int damage)
     {
         hitPoints -= damage;
+        healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
         if (hitPoints < 0)
         {
             Destroy(gameObject, 1);
-			RemoveFromArray(this);
+            RemoveFromArray(this);
+            RemoveFromQueue(this);
         }
     }
 
@@ -37,4 +48,10 @@ public class CharacterAttributes : MonoBehaviour {
 		var c = other as CharacterAttributes;
 		return c.gameObject == gameObject;
 	}
+
+    public void NewTurn()
+    {
+        mobilityLeft = mobility;
+        hasAttacked = false;
+    }
 }

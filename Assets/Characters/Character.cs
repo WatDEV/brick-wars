@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Enums;
+using UnityEngine;
 
 namespace Assets.Characters
 {
@@ -8,14 +9,18 @@ namespace Assets.Characters
         public readonly CharacterHighlight CharacterHighlight;
         public readonly CharacterAttributes CharacterAttributes;
         public readonly GameObject CharacterActor;
+        public readonly CharacterEnum Type;
+        public readonly int Team;
 
-        public Character(CharacterMovement characterMovement, CharacterHighlight characterHighlight, GameObject characterActor, CharacterAttributes characterAttributes)
+        public Character(CharacterMovement characterMovement, CharacterHighlight characterHighlight, GameObject characterActor, CharacterAttributes characterAttributes, CharacterEnum type, int team)
         {
             CharacterActor = characterActor;
 			CharacterHighlight = characterHighlight;
             CharacterMovement = characterMovement;
             CharacterAttributes = characterAttributes;
             CharacterMovement.IsSelected = () => CharacterHighlight.State == CharacterHighlightEnum.Selected;
+            Type = type;
+            Team = team;
 		}
 	}
 }

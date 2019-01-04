@@ -8,7 +8,7 @@ namespace Assets.Characters
 {
 	class ShieldMovement : CharacterMovement
 	{
-        public override void SetCoorinates(Vector2Int centerCoord)
+        public override void SetCoordinates(Vector2Int centerCoord)
         {
             switch (Rotation)
             {
@@ -79,7 +79,73 @@ namespace Assets.Characters
             }
             
         }
-
+        public override Vector2Int[] GetCoordinates(Vector2Int centerCoord)
+        {
+            switch (Rotation)
+            {
+                case GridRotation.Up:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+                case GridRotation.Down:
+                    return new Vector2Int[]
+                    {
+                        new Vector2Int
+                        {
+                            x=centerCoord.x-1,
+                            y=centerCoord.y
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x+1,
+                            y=centerCoord.y
+                        }
+                    };
+                case GridRotation.Left:
+                    return new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+                case GridRotation.Right:
+                    return new Vector2Int[]
+                    {
+                       new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y-1
+                        },
+                        centerCoord,
+                        new Vector2Int
+                        {
+                            x=centerCoord.x,
+                            y=centerCoord.y+1
+                        }
+                    };
+            }
+            return null;
+        }
         public override Vector2Int[] GetFutureCoordinates(Vector2Int futureCoords)
         {
             switch (Rotation)
@@ -148,8 +214,10 @@ namespace Assets.Characters
             return null;
         }
 		public override Vector2Int[] GetAttackArea()
-		{
-			var coords = GetCenterCoord();
+        {
+            if (Coordinates == null)
+                return null;
+            var coords = GetCenterCoord();
 			switch (Rotation)
 			{
 				case GridRotation.Up:
@@ -218,6 +286,15 @@ namespace Assets.Characters
 				totalY += c.y;
 			}
 			return new Vector2Int(totalX / 3, totalY / 3);
-		}
-	}
+        }
+        protected override List<Tuple<Vector2Int, int>> GetDamage()
+        {
+            var damages = new List<Tuple<Vector2Int, int>>();
+            foreach (var c in GetAttackArea())
+            {
+                damages.Add(new Tuple<Vector2Int, int>(c, Damage * (int)Math.Round(Vector2Int.Distance(GetCenterCoord(),c))));
+            }
+            return damages;
+        }
+    }
 }

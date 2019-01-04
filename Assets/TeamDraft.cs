@@ -1,5 +1,6 @@
 ﻿using Assets.Characters;
 using Assets.Enums;
+using RTS_Cam;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,11 @@ using UnityEngine.UI;
 
 public class TeamDraft : MonoBehaviour
 {
+    public GameObject Camera;
+    public GameObject BattleUI;
+    public GameObject BattleButtons;
+    public GameObject QueueUI;
+
     public Text PlayerName;
     public Text Resources;
     public GameObject Combat;
@@ -125,7 +131,13 @@ public class TeamDraft : MonoBehaviour
         var combat = c.GetComponent<Combat>();
         combat.Player1 = Players.FirstOrDefault(x => x.ID == 0);
         combat.Player2 = Players.FirstOrDefault(x => x.ID == 1);
+        combat.Queue = QueueUI.GetComponent<QueueScript>();
+        combat.BattleUIScript = BattleUI.GetComponent<BattleUIScript>();
 
         TeamDraftObject.SetActive(false);
+
+        Camera.GetComponent<RTS_Camera>().enabled = true;
+        BattleUI.SetActive(true);
+        BattleButtons.GetComponent<BattleButtons>().Combat = combat;
     }
 }

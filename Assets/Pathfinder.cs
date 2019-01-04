@@ -6,8 +6,11 @@ using UnityEngine;
 public class Pathfinder : MonoBehaviour
 {
 	public Vector2Int Coordinates { get; set; }
+    public Func<bool> IsFirstTurn;
+    public Action<Vector2Int> SetFirstPosition;
 	public Func<Vector2Int, bool> AddPath;
 	public Action FinishPath;
+
     private TileHighlight Highlighter { get { return GetComponent<TileHighlight>(); } }
 
 	void OnMouseEnter()
@@ -24,6 +27,12 @@ public class Pathfinder : MonoBehaviour
 
 	void OnMouseDown()
     {
+        if(IsFirstTurn())
+        {
+            SetFirstPosition(Coordinates);
+            return;
+        }
+
         if (AddPath(Coordinates))
             Highlighter.HighlightAsPath();
     }
