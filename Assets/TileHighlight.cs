@@ -4,7 +4,7 @@ using UnityEngine;
 public class TileHighlight : MonoBehaviour
 {
 	private TileHighlightEnum state;
-	private TileHighlightEnum State
+	public TileHighlightEnum State
 	{
 		get
 		{

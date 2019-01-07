@@ -14,9 +14,10 @@ public class CharacterMovement : MonoBehaviour
 
 	public Action<List<Tuple<Vector2Int, int>>,bool> ApplyDamage;
 	public Action UpdateAttackArea;
+	public Action UpdateMobility;
 	public Func<bool> IsSelected;
 
-    private CharacterAttributes attributes;
+    public CharacterAttributes attributes;
 
 	private float attackTimer = 0;
 
@@ -26,9 +27,6 @@ public class CharacterMovement : MonoBehaviour
     {
         get
         {
-            if (attributes == null)
-                attributes = GetComponent<CharacterAttributes>();
-
             return attributes.damage;
         }
     }
@@ -125,6 +123,8 @@ public class CharacterMovement : MonoBehaviour
 				SetCoordinates(pathCoords.First.Value);
 				pathCoords.RemoveFirst();
 				UpdateAttackArea();
+				attributes.mobilityLeft--;
+				UpdateMobility();
 
 				if (path.Count == 0)
 				{
@@ -199,8 +199,8 @@ public class CharacterMovement : MonoBehaviour
         if (!CanMove(GetFutureCoordinates(pathCoords.First.Value)))
         {
             return false;
-        }
-        this.path = path;
+		}
+		this.path = path;
         this.pathCoords = pathCoords;
         return true;
     }

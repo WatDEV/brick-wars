@@ -12,7 +12,6 @@ public class CharacterAttributes : MonoBehaviour {
     public int mobility = 8;
 	public int turnTimer = 0;
     public int mobilityLeft = 8;
-    public bool hasAttacked = false;
     public bool isStunned = false;
 
     public GameObject HealthBarGO;
@@ -21,8 +20,13 @@ public class CharacterAttributes : MonoBehaviour {
 	public Action<CharacterAttributes> RemoveFromArray;
     public Action<CharacterAttributes> RemoveFromQueue;
 
-    // Use this for initialization
-    void Start () {
+	public int numberOfAttacks = 1;
+	public int remainingNumberOfAttacks = 1;
+
+	public bool hasAttacked	{ get { return remainingNumberOfAttacks <= 0; } }
+
+	// Use this for initialization
+	void Start () {
         healthBar = HealthBarGO.GetComponent<HealthBarScript>();
         hitPoints = maxHitPoints;
         healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
@@ -36,7 +40,7 @@ public class CharacterAttributes : MonoBehaviour {
     {
         hitPoints -= damage;
         healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
-        if (hitPoints < 0)
+        if (hitPoints <= 0)
         {
             Destroy(gameObject, 1);
             RemoveFromArray(this);
@@ -53,6 +57,6 @@ public class CharacterAttributes : MonoBehaviour {
     public void NewTurn()
     {
         mobilityLeft = mobility;
-        hasAttacked = false;
+		remainingNumberOfAttacks = numberOfAttacks;
     }
 }

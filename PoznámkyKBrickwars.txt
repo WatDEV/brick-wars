@@ -1,0 +1,18 @@
+Nedokončené fičúre:
+1. shield vie blokovať aoe útoky
+2. jumper nevie vyskočiť na tower lebo je príliš vysoký -- ???? alebo reduce damage
+
+To fix before alfa release:
+3. movement bug s 3 tilami
+9. imperial march as sound efect of moving shield
+13. destructible on scene change
+
+Done:
+4. 0 health! ---
+5. mrtvych z queue vyhodiť ---
+6. po útoku odobrať polovicu max pohybu (jumper má free prvý útok) ---
+7. opraviť path --- sufficiently
+8. costy tehiel napísať do výberu --
+10. balance first turn 50:50 ---
+11. after collision return back unused mobility ---
+12. obrázky do draftu--

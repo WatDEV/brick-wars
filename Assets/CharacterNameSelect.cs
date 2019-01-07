@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterNameSelect : MonoBehaviour {
@@ -36,4 +37,9 @@ public class CharacterNameSelect : MonoBehaviour {
         PlayerName.Select();
         PlayerName.text = "";
     }
+
+	public void Exit()
+	{
+		SceneManager.LoadScene("StartMenu");
+	}
 }

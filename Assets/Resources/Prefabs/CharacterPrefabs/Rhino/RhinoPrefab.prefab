@@ -344,16 +344,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c1d4b4d3c64a941b8bdd51ea7c4dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 20
-  damage: 30
+  movementSpeed: 12
+  damage: 50
   hitPoints: 100
   maxHitPoints: 100
-  mobility: 16
+  mobility: 12
   turnTimer: 0
-  mobilityLeft: 16
-  hasAttacked: 0
+  mobilityLeft: 12
   isStunned: 0
   HealthBarGO: {fileID: 1743704379233152}
+  numberOfAttacks: 1
+  remainingNumberOfAttacks: 1
 --- !u!114 &114771935844709176
 MonoBehaviour:
   m_ObjectHideFlags: 1

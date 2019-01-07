@@ -116,9 +116,10 @@ public class Combat : MonoBehaviour
             team1[i].CharacterMovement.CanMove += CanMove;
             team1[i].CharacterMovement.SetRotation(Assets.GridRotation.Up);
             team1[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
-            team1[i].CharacterMovement.ApplyDamage += ApplyDamage;
+			team1[i].CharacterMovement.ApplyDamage += ApplyDamage;
+			team1[i].CharacterMovement.UpdateMobility += () => BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
 
-            team1[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
+			team1[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
             i++;
         }
 
@@ -136,8 +137,9 @@ public class Combat : MonoBehaviour
             team2[i].CharacterMovement.SetRotation(Assets.GridRotation.Down);
             team2[i].CharacterMovement.UpdateAttackArea += UpdateAttackArea;
             team2[i].CharacterMovement.ApplyDamage += ApplyDamage;
+			team2[i].CharacterMovement.UpdateMobility += () => BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
 
-            team2[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
+			team2[i].CharacterAttributes.RemoveFromArray += RemoveFromArray;
             i++;
         }
     }
@@ -219,7 +221,7 @@ public class Combat : MonoBehaviour
 
         if (SelectedCharacter.CharacterMovement.InitializeMovement(pathVec3, path))
         {
-            SelectedCharacter.CharacterAttributes.mobilityLeft -= path.Count;
+            //SelectedCharacter.CharacterAttributes.mobilityLeft -= path.Count;
             BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
         }
     }
@@ -245,8 +247,7 @@ public class Combat : MonoBehaviour
                 }
             }
         }
-
-        return true;
+		return true;
     }
     private void UpdateAttackArea()
     {
@@ -259,7 +260,8 @@ public class Combat : MonoBehaviour
             return;
 
         grid.HighlighAttackArea(coordsToHighlight);
-    }
+		BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
+	}
 
     private bool IsFirstTurn()
     {
@@ -300,7 +302,17 @@ public class Combat : MonoBehaviour
         if (selectedCharacter == null || selectedCharacter.CharacterAttributes.hasAttacked == true)
             return;
 
-        selectedCharacter.CharacterAttributes.hasAttacked = selectedCharacter.CharacterMovement.InitializeAttack();
+		if(selectedCharacter.CharacterMovement.InitializeAttack())
+		{
+			selectedCharacter.CharacterAttributes.remainingNumberOfAttacks--;
+			if (selectedCharacter.CharacterAttributes.remainingNumberOfAttacks <= 0)
+			{
+				selectedCharacter.CharacterAttributes.mobilityLeft -= selectedCharacter.CharacterAttributes.mobility / 2;
+				selectedCharacter.CharacterAttributes.mobilityLeft = selectedCharacter.CharacterAttributes.mobilityLeft < 0 
+					? 0 
+					: selectedCharacter.CharacterAttributes.mobilityLeft;
+			}
+		}        
         BattleUIScript.UpdateCharacterOnTurnState(SelectedCharacter);
     }
 }

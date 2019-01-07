@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Enums;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,15 +11,28 @@ public class Pathfinder : MonoBehaviour
     public Action<Vector2Int> SetFirstPosition;
 	public Func<Vector2Int, bool> AddPath;
 	public Action FinishPath;
+	public Func<Vector2Int, bool> IsLastPath;
+	public Action RemoveLastPath;
 
-    private TileHighlight Highlighter { get { return GetComponent<TileHighlight>(); } }
+	private TileHighlight Highlighter { get { return GetComponent<TileHighlight>(); } }
 
 	void OnMouseEnter()
 	{
         if (!Input.GetMouseButton(0))
             return;
-        if (AddPath(Coordinates))
-            Highlighter.HighlightAsPath();
+		if(Highlighter.State == TileHighlightEnum.Path)
+		{
+			if(IsLastPath(Coordinates))
+			{
+				RemoveLastPath();
+				Highlighter.StopHighlightingAsPath();
+			}
+		}
+		else
+		{
+			if (AddPath(Coordinates))
+				Highlighter.HighlightAsPath();
+		}
 	}
 
 	void OnMouseExit()

@@ -44,25 +44,59 @@ namespace InitativeNamespace
 
         private void CalculateQueue()
         {
-            /*Queue.RemoveAll(x => x.CharacterAttributes == null || x.CharacterAttributes.hitPoints <= 0);
-            characters.RemoveAll(x => x.CharacterAttributes.hitPoints <= 0);*/
+            Queue.RemoveAll(x => x.CharacterAttributes == null || x.CharacterAttributes.hitPoints <= 0);
+            characters.RemoveAll(x => x.CharacterAttributes.hitPoints <= 0);
 
             while (Queue.Count < 11)
             {
-                foreach (var d in characters)
-                {
-                    if (d.CharacterAttributes.turnTimer >= threshold)
-                    {
-                        d.CharacterAttributes.turnTimer -= threshold;
-                        Queue.AddLast(d);
-                    }
-                }
+				AddCharactersToQueue();
 
-                foreach (var d in characters)
+				foreach (var d in characters)
                 {
                     d.CharacterAttributes.turnTimer += d.CharacterAttributes.movementSpeed;
                 }
             }
         }
+		
+		private void AddCharactersToQueue()
+		{
+			var chars = new List<Character>();
+
+			foreach (var d in characters)
+			{
+				if (d.CharacterAttributes.turnTimer >= threshold)
+				{
+					d.CharacterAttributes.turnTimer -= threshold;
+					chars.Add(d);
+				}
+			}
+
+			var keyValuesGroups = chars.GroupBy(x => x.CharacterAttributes.turnTimer)
+				.SelectMany(x => x)
+				.Select(x => new { Key = x.CharacterAttributes.turnTimer, Value = x });
+			keyValuesGroups.OrderBy(x => x.Key);
+
+			var groupsOfSameValue = new Dictionary<int, List<Character>>();
+			foreach(var c in keyValuesGroups)
+			{				
+				if (!groupsOfSameValue.ContainsKey(c.Key))
+				{
+					groupsOfSameValue.Add(c.Key, new List<Character> { c.Value });
+				}
+				else
+				{
+					groupsOfSameValue[c.Key].Add(c.Value);
+				}
+			}
+
+			foreach(var group in groupsOfSameValue)
+			{
+				group.Value.Shuffle();
+				foreach(var g in group.Value)
+				{
+					Queue.AddLast(g);
+				}
+			}
+		}
 	}
 }

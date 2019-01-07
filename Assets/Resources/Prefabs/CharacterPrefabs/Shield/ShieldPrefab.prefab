@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609df30770e8d964eb2ac8e8e600491d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasStunAttack: 0
   MovementSpeed: 20
 --- !u!114 &114544469736298518
 MonoBehaviour:
@@ -386,15 +387,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c1d4b4d3c64a941b8bdd51ea7c4dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10
+  movementSpeed: 12
   damage: 30
   hitPoints: 800
   maxHitPoints: 800
-  mobility: 4
+  mobility: 6
   turnTimer: 0
-  mobilityLeft: 8
-  hasAttacked: 0
+  mobilityLeft: 6
+  isStunned: 0
   HealthBarGO: {fileID: 1901800951567558}
+  numberOfAttacks: 1
+  remainingNumberOfAttacks: 1
 --- !u!114 &114757474931172896
 MonoBehaviour:
   m_ObjectHideFlags: 1

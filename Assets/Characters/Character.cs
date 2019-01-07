@@ -19,6 +19,7 @@ namespace Assets.Characters
             CharacterMovement = characterMovement;
             CharacterAttributes = characterAttributes;
             CharacterMovement.IsSelected = () => CharacterHighlight.State == CharacterHighlightEnum.Selected;
+			CharacterMovement.attributes = CharacterAttributes;
             Type = type;
             Team = team;
 		}

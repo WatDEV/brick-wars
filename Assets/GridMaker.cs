@@ -55,6 +55,8 @@ public class GridMaker : MonoBehaviour
                 tile.Coordinates = new Vector2Int(i, j);
 				tile.FinishPath += FinishPath;
 				tile.AddPath += AddPath;
+				tile.IsLastPath += (coords) => Path.Last.Value == coords;
+				tile.RemoveLastPath += () => Path.RemoveLast();
                 Pathfinders.AddLast(tile);
 
 				TileGrid[i, j] = cube;
