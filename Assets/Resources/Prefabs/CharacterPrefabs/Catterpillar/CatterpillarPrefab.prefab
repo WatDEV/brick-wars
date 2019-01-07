@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 16
-  damage: 170
+  damage: 180
   hitPoints: 400
   maxHitPoints: 400
   mobility: 9

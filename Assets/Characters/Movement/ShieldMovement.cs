@@ -275,18 +275,6 @@ namespace Assets.Characters
 			}
 			return base.GetAttackArea();
 		}
-		private Vector2Int GetCenterCoord()
-		{
-			var totalX = 0;
-			var totalY = 0;
-
-			foreach (var c in Coordinates)
-			{
-				totalX += c.x;
-				totalY += c.y;
-			}
-			return new Vector2Int(totalX / 3, totalY / 3);
-        }
         protected override List<Tuple<Vector2Int, int>> GetDamage()
         {
             var damages = new List<Tuple<Vector2Int, int>>();
@@ -295,6 +283,47 @@ namespace Assets.Characters
                 damages.Add(new Tuple<Vector2Int, int>(c, Damage * (int)Math.Round(Vector2Int.Distance(GetCenterCoord(),c))));
             }
             return damages;
+        }
+
+        public override Vector2Int[] GetPathToNeighbourCoordIfPossible(Vector2Int coord)
+        {
+            var centerCoord = GetCenterCoord();
+            if (Rotation == GridRotation.Left || Rotation == GridRotation.Right)
+            {
+                if (Vector2Int.Distance(centerCoord, coord) == 1 && (coord.x == centerCoord.x + 1 || coord.x == centerCoord.x - 1))
+                    return new Vector2Int[] { coord };
+                else if (Vector2Int.Distance(centerCoord, coord) == 2 && coord.y == centerCoord.y + 2)
+                    return new Vector2Int[]
+                    {
+                            new Vector2Int(centerCoord.x, centerCoord.y + 1),
+                            coord
+                    };
+                else if (Vector2Int.Distance(centerCoord, coord) == 2 && coord.y == centerCoord.y - 2)
+                    return new Vector2Int[]
+                    {
+                            new Vector2Int(centerCoord.x, centerCoord.y - 1),
+                            coord
+                    };
+            }
+            else
+            {
+                if (Vector2Int.Distance(centerCoord, coord) == 1 && (coord.y == centerCoord.y + 1 || coord.y == centerCoord.y - 1))
+                    return new Vector2Int[] { coord };
+                else if (Vector2Int.Distance(centerCoord, coord) == 2 && coord.x == centerCoord.x + 2)
+                    return new Vector2Int[]
+                    {
+                            new Vector2Int(centerCoord.x + 1, centerCoord.y),
+                            coord
+                    };
+                else if (Vector2Int.Distance(centerCoord, coord) == 2 && coord.x == centerCoord.x - 2)
+                    return new Vector2Int[]
+                    {
+                            new Vector2Int(centerCoord.x - 1, centerCoord.y),
+                            coord
+                    };
+            }
+
+            return null;
         }
     }
 }

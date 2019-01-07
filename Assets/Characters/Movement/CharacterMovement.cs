@@ -113,6 +113,13 @@ public class CharacterMovement : MonoBehaviour
         return Coordinates[0];
     }
 
+    public virtual Vector2Int[] GetPathToNeighbourCoordIfPossible(Vector2Int coord)
+    {
+        if (Vector2Int.Distance(GetCenterCoord(), coord) == 1)
+            return new Vector2Int[] { coord };
+        return null;
+    }
+
    	private void Move()
 	{
 		if (path != null && path.Count != 0)

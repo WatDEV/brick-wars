@@ -91,16 +91,16 @@ public class GridMaker : MonoBehaviour
 
         if ((Path == null || Path.Count == 0 ) && GetSelectedCharacter().CharacterMovement.Coordinates != null)
         {
-            var canAddPath = false;
-            foreach (var charactersLocation in GetSelectedCharacter().CharacterMovement.Coordinates)
+            var p = GetSelectedCharacter().CharacterMovement.GetPathToNeighbourCoordIfPossible(coords);
+            if (p != null)
             {
-                if (Vector2Int.Distance(charactersLocation, coords) <= 1)
+                foreach (var c in p)
                 {
-                    canAddPath = true;
+                    Path.AddLast(c);
                 }
+                return true;
             }
-            if (!canAddPath)
-                return false;
+            return false;
         }
 
 		Path.AddLast(coords);
