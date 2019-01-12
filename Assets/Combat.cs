@@ -187,18 +187,40 @@ public class Combat : MonoBehaviour
     {
         var character = team1.FirstOrDefault(x => x.CharacterAttributes == c) ?? team2.FirstOrDefault(x => x.CharacterAttributes == c);
 
-        team1.Remove(character);
-        team2.Remove(character);
+		if(character.Team == 1)
+		{
+			team1.Remove(character);
 
-        if (team1.Count == 0)
-        {
-            FinishGame(Player2.Name);
-        }
-        else if (team2.Count == 0)
-        {
-            FinishGame(Player1.Name);
-        }
+			if (team1.Count <= 0)
+			{
+				FinishGame(Player2.Name);
+			}
 
+			int hpToAdd = character.CharacterAttributes.maxHitPoints / team1.Count;
+			foreach(var ch in team1)
+			{
+				ch.CharacterAttributes.maxHitPoints += hpToAdd;
+				ch.CharacterAttributes.hitPoints += hpToAdd;
+				ch.CharacterAttributes.UpdateHPBar();
+			}
+		}
+		else
+		{
+			team2.Remove(character);
+
+			if(team2.Count <= 0)
+			{
+				FinishGame(Player1.Name);
+			}
+
+			int hpToAdd = character.CharacterAttributes.maxHitPoints / team2.Count;
+			foreach (var ch in team2)
+			{
+				ch.CharacterAttributes.maxHitPoints += hpToAdd;
+				ch.CharacterAttributes.hitPoints += hpToAdd;
+				ch.CharacterAttributes.UpdateHPBar();
+			}
+		}
     }
 
     private void ApplyDamage(List<Tuple<Vector2Int, int>> damages, bool isStunAttack)

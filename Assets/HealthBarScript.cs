@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class HealthBarScript : MonoBehaviour {
 
     public Slider Slider;
+	public Text Hp;
 
-    public void UpdateValue(float value)
+    public void UpdateValue(int hitPoints, int maxHitPoints)
     {
-        Slider.value = value;
+        Slider.value = hitPoints / (float)maxHitPoints;
+		Hp.text = $"{hitPoints}/{maxHitPoints}";
     }
 
     void LateUpdate()

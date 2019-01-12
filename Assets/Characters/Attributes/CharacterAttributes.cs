@@ -29,7 +29,7 @@ public class CharacterAttributes : MonoBehaviour {
 	void Start () {
         healthBar = HealthBarGO.GetComponent<HealthBarScript>();
         hitPoints = maxHitPoints;
-        healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
+        healthBar.UpdateValue(hitPoints, maxHitPoints);
 	}
 	
 	// Update is called once per frame
@@ -39,7 +39,7 @@ public class CharacterAttributes : MonoBehaviour {
     public void Hurt(int damage)
     {
         hitPoints -= damage;
-        healthBar.UpdateValue(hitPoints / (float)maxHitPoints);
+        healthBar.UpdateValue(hitPoints, maxHitPoints);
         if (hitPoints <= 0)
         {
             Destroy(gameObject, 1);
@@ -59,4 +59,8 @@ public class CharacterAttributes : MonoBehaviour {
         mobilityLeft = mobility;
 		remainingNumberOfAttacks = numberOfAttacks;
     }
+	 public void UpdateHPBar()
+	{
+		healthBar.UpdateValue(hitPoints, maxHitPoints); 
+	}
 }
