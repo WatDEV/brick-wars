@@ -16,6 +16,7 @@ public class CharacterMovement : MonoBehaviour
 	public Action UpdateAttackArea;
 	public Action UpdateMobility;
 	public Func<bool> IsSelected;
+    public bool IsGameOver = false;
 
     public CharacterAttributes attributes;
 
@@ -56,8 +57,11 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-		Move();
-		Rotate();
+        if (!IsGameOver)
+        {
+            Move();
+            Rotate();
+        }
 		
 		if(attackTimer > 0)
 		{

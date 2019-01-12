@@ -6,11 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Combat : MonoBehaviour
 {
     public Player Player1;
     public Player Player2;
+
+    public GameObject EndGameScreen;
+    public GameObject BattleUI;
+    public Text WinnerText;
 
     public GameObject GridPrefab;
 
@@ -69,7 +74,6 @@ public class Combat : MonoBehaviour
 
     public void Next()
     {
-
         while (true)
         {
             Queue.UpdateSprites(initative.Queue);
@@ -90,15 +94,18 @@ public class Combat : MonoBehaviour
             }
         }
 
-        if (team1.Count == 0)
-        {
-            Debug.Log("Team 2 won!");
-        }
-        if (team2.Count == 0)
-        {
-            Debug.Log("Team 1 won!");
-        }
+       
+    }
 
+    private void FinishGame(string winnerName)
+    {
+        WinnerText.text = $"Player {winnerName} has won!";
+        BattleUI.SetActive(false);
+        EndGameScreen.SetActive(true);
+
+        SelectedCharacter.CharacterAttributes.mobilityLeft = 0;
+        foreach(var c in GetCharacters())
+            c.CharacterMovement.IsGameOver = true;
     }
 
     private void InitializeTeams()
@@ -182,6 +189,16 @@ public class Combat : MonoBehaviour
 
         team1.Remove(character);
         team2.Remove(character);
+
+        if (team1.Count == 0)
+        {
+            FinishGame(Player2.Name);
+        }
+        else if (team2.Count == 0)
+        {
+            FinishGame(Player1.Name);
+        }
+
     }
 
     private void ApplyDamage(List<Tuple<Vector2Int, int>> damages, bool isStunAttack)

@@ -20,6 +20,8 @@ public class TeamDraft : MonoBehaviour
     public GameObject Combat;
     public GameObject TeamDraftObject;
     private List<Player> players;
+    public GameObject EndGameScreen;
+    public Text WinnerText;
 
     public Text RhinoCounter;
     public Text JumperCounter;
@@ -133,6 +135,9 @@ public class TeamDraft : MonoBehaviour
         combat.Player2 = Players.FirstOrDefault(x => x.ID == 1);
         combat.Queue = QueueUI.GetComponent<QueueScript>();
         combat.BattleUIScript = BattleUI.GetComponent<BattleUIScript>();
+        combat.BattleUI = BattleUI;
+        combat.EndGameScreen = EndGameScreen;
+        combat.WinnerText = WinnerText;
 
         TeamDraftObject.SetActive(false);
 
