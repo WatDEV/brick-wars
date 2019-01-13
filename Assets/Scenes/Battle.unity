@@ -1164,7 +1164,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: ' Jumper:;; HP: 160; Damage type: Single target; Damage:
+            m_StringArgument: ' Jumper:; HP: 200; Damage type: Single target; Damage:
               40; Mobility: 10 tiles; Turn speed: Fast; Additional utility: Can attack
               twice per turn;'
             m_BoolArgument: 0
@@ -3063,8 +3063,8 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: ' Rhino:;; HP: 100; Damage type: Single target; Damage:
-              50; Mobility: 12 tiles; Turn speed: Slow; Additional utility: Stun attack;'
+            m_StringArgument: ' Rhino:; HP: 100; Damage type: Single target; Damage:
+              50; Mobility: 16 tiles; Turn speed: Slow; Additional utility: Stun attack;'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
@@ -3696,9 +3696,9 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: ' Worm:;; HP: 400; Damage type: AoE - 1x2 tiles; Damage:
-              Nearest tile - 180, Second tile - 60; Mobility: 9 tiles; Turn speed:
-              Fast; Additional utility: none;'
+            m_StringArgument: ' Worm:; HP: 400; Damage type: AoE - 1x2 tiles; Damage:
+              Nearest tile - 180, Second tile - 60; Mobility: 8 tiles; Turn speed:
+              Average; Additional utility: none;'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
@@ -5408,8 +5408,8 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: ' Shield:;; HP: 800; Damage type: AoE - 3x3 tiles; Damage:
-              30*distance; Mobility: 6 tiles; Turn speed: Slow; Additional utility:
+            m_StringArgument: ' Shield:; HP: 800; Damage type: AoE - 3x3 tiles; Damage:
+              30*distance; Mobility: 7 tiles; Turn speed: Slow; Additional utility:
               none;'
             m_BoolArgument: 0
           m_CallState: 2
